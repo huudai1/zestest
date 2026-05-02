@@ -1,0 +1,6 @@
+name = "zestest-api"
+main = "server/src/index.ts" # Thêm chữ server/ vào đầu
+compatibility_date = "2026-05-02"
+
+[assets]
+directory = "./client" # Thêm dòng này để nó tự hiểu folder giao diện
