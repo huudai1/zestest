@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Zestest Student</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.3/dist/photoswipe.css">
+    <link rel="stylesheet" href="dashboard-style.css">
+    <link rel="stylesheet" href="stu_quizz.css">
+    <link rel="stylesheet" href="summary.css">
+    <link rel="stylesheet" href="detail.css">
+    <style>
+        :root {
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --primary: #1ed760;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+        }
+
+        /* RESET & BASE */
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            height: 100dvh;
+            overflow: hidden;
+            position: fixed;
+            width: 100vw;
+        }
+
+        .page {
+            display: none;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+        }
+
+        /* ================= PAGE 0: LOBBY DASHBOARD ================= */
+        #page-lobby {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background-color: var(--bg-main);
+        }
+
+        .dashboard-container {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-header {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .user-badge {
+            flex: 1;
+            background: var(--bg-card);
+            border: 1px solid #334155;
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            text-align: center;
+            color: var(--text-dim);
+        }
+
+        .banner-box {
+            background: linear-gradient(135deg, #1e3a8a, var(--primary));
+            border-radius: 16px;
+            min-height: 100px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .stu-input-box {
+            background: var(--bg-card);
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 1px solid var(--primary);
+        }
+
+        .stu-input-box input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            text-align: center;
+        }
+
+        .exam-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 18px;
+            border: 1px solid #334155;
+        }
+
+        .btn-start {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        /* ================= PAGE 1: QUIZ (MOBILE & PC) ================= */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #181818;
+        }
+
+        .fixed-header {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            gap: 6px;
+            background: #121212;
+            border-bottom: 1px solid #222;
+            overflow: hidden;
+        }
+
+        /* Audio player panel — swap với action-group */
+        #audio-panel {
+            flex: 1;
+            display: none;
+            align-items: center;
+            gap: 6px;
+            padding: 0 6px;
+            min-width: 0;
+            background: #b36b00;
+            border-radius: 8px;
+            height: 36px;
+        }
+
+        #audio-panel.active {
+            display: flex;
+        }
+
+        #audio-panel-icon {
+            font-size: 14px;
+            flex-shrink: 0;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        #audio-seek {
+            flex: 1;
+            min-width: 0;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.3);
+            outline: none;
+            cursor: pointer;
+        }
+
+        #audio-seek::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #fff;
+            cursor: pointer;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+        }
+
+        #audio-time {
+            font-size: 10px;
+            font-variant-numeric: tabular-nums;
+            color: rgba(255, 255, 255, 0.9);
+            flex-shrink: 0;
+        }
+
+        #audio-close {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            cursor: pointer;
+            flex-shrink: 0;
+            padding: 0 2px;
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .fixed-footer {
+            height: 65px;
+            background: rgba(18, 18, 18, 0.85);
+            backdrop-filter: blur(10px);
+        }
+
+        /* PC ADAPTIVE LAYOUT */
+        @media (min-width: 768px) {
+            .app-container {
+                max-width: 1200px;
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            .fixed-header {
+                flex: 0 0 100%;
+            }
+
+            .main-content {
+                flex: 1 1 60%;
+                height: calc(100% - 50px);
+                border-right: 1px solid #222;
+            }
+
+            .fixed-footer {
+                flex: 0 0 380px;
+                height: calc(100% - 50px);
+                border-top: none;
+                border-left: 1px solid #333;
+                padding: 10px;
+                display: block;
+                overflow-y: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="page-lobby" class="page">
+        <div class="dashboard-container">
+            <div class="user-header">
+                <div class="user-badge">Zestest v2.0</div>
+                <div class="user-badge" id="display-date">--/--/2026</div>
+            </div>
+            <div class="banner-box">Chào mừng! Chúc ông thi tốt.</div>
+            <div class="stu-input-box">
+                <input type="text" id="inputName" placeholder="Nhập Họ Tên của ông..." autocomplete="off">
+            </div>
+            <div class="exam-card">
+                <h2 id="lobby-exam-name" style="margin-top:0">Đang tải đề...</h2>
+                <p id="lobby-pkg" style="font-size:12px; color:var(--text-dim)">--</p>
+                <button class="btn-start" id="btnStart">BẮT ĐẦU NGAY</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-quiz" class="page">
+        <div class="app-container">
+            <header class="fixed-header">
+                <div class="mini-dashboard">
+                    <div class="dash-row time">
+                        <div class="dash-bar" id="bar-time"></div>
+                        <span id="timer-text">00:00</span>
+                    </div>
+                    <div class="dash-row progress">
+                        <div class="dash-bar" id="bar-progress"></div>
+                        <span id="progress-text">0/--</span>
+                    </div>
+                </div>
+                <div class="current-q-box">
+                    <span class="q-label">Q</span>
+                    <span id="current-q-view">1</span>
+                </div>
+                <!-- Audio Panel: hiện khi phát audio, ẩn action-group -->
+                <div id="audio-panel">
+                    <span id="audio-panel-icon" onclick="AudioController.toggle()">&#9616;&#9616;</span>
+                    <input id="audio-seek" type="range" min="0" max="100" value="0"
+                        oninput="AudioController.seek(this.value)">
+                    <span id="audio-time">0:00</span>
+                    <button id="audio-close" onclick="AudioController.collapse()">✕</button>
+                </div>
+                <div class="action-group" id="header-action-group">
+                    <button class="btn-icon orange" id="audio-btn" style="display:none;"
+                        onclick="AudioController.toggle()">▶</button>
+
+                    <!-- Nút Nghi vấn mới -->
+                    <button class="btn-icon yellow" id="btn-flag" onclick="StuManager.toggleFlag()">?</button>
+
+                    <button class="btn-icon" id="btn-modal" onclick="StuManager.openModal()">📁</button>
+                    <button class="btn-main green" id="btn-submit"
+                        onclick="SubmitHandler.handleSubmission()">Nộp</button>
+                </div>
+            </header>
+            <main class="main-content">
+                <div class="webp-container">
+                    <p>Đang tải đề thi...</p>
+                </div>
+            </main>
+            <footer class="fixed-footer">
+                <!-- Swiper Container -->
+                <div class="swiper answer-swiper">
+                    <!-- Swiper Wrapper (Nơi Swiper tính toán cuộn ngang) -->
+                    <div class="swiper-wrapper" id="main-wrapper">
+                        <!-- Các slide sẽ được JS inject vào đây -->
+                        <!-- VD: <div class="swiper-slide" ...> </div> -->
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <div id="page-summary" class="page">
+        <div class="mobile-container">
+        </div>
+    </div>
+
+    <div id="page-detail" class="page">
+    </div>
+
+    <!-- Cấu trúc Modal chuẩn để JS có chỗ đổ dữ liệu vào -->
+    <div id="gridModal" class="modal-overlay" onclick="if(event.target === this) StuManager.closeModal()">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span>DANH SÁCH CÂU HỎI</span>
+                <button class="close-modal" onclick="StuManager.closeModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="question-grid" id="questionGrid">
+                    <!-- JS sẽ đổ grid-item vào đây -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="legend">
+                    <div class="leg-item"><span class="dot done"></span> Đã làm</div>
+                    <div class="leg-item"><span class="dot flagging"></span> Nghi vấn</div>
+                    <div class="leg-item"><span class="dot pending"></span> Chưa làm</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/photoswipe@5.4.3/dist/umd/photoswipe.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/photoswipe@5.4.3/dist/umd/photoswipe-lightbox.umd.min.js"></script>
+    <script src="/static/js/storage/storage_manager.js"></script>
+    <script src="/static/js/storage/session_manager.js"></script>
+    <script src="/static/student/render_manager.js"></script>
+    <script src="/static/student/stu_manager.js"></script>
+    <script src="/static/student/quiz_controller.js"></script>
+    <script src="/static/student/InitData.js"></script>
+    <script src="/static/student/submit_handler.js"></script>
+    <script src="/static/student/detail_manager.js"></script>
+
+    <script>
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+            const target = document.getElementById(pageId);
+            if (target) target.style.display = 'flex';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const userId = params.get('u');
+            const pkgName = params.get('pkg');
+
+            if (pkgName) {
+                document.getElementById('lobby-exam-name').innerText = pkgName.split('.')[0];
+                document.getElementById('lobby-pkg').innerText = "Gói đề: " + pkgName;
+            }
+            document.getElementById('display-date').innerText = new Date().toLocaleDateString('vi-VN');
+            showPage('page-lobby');
+
+            document.getElementById('btnStart').onclick = async () => {
+                const name = document.getElementById('inputName').value.trim();
+                if (!name) return alert("Nhập tên đã ông giáo!");
+
+                sessionStorage.setItem('stu_name', name);
+                showPage('page-quiz');
+
+                try {
+                    const examId = pkgName ? pkgName.split('_')[0] : "test";
+                    await QuizController.init(userId, examId, pkgName);
+                    await RenderManager.initView(false);
+                } catch (err) {
+                    console.warn("Lỗi tải đề, đang chạy mock data để test UI:", err);
+                    // Mock data để test layout nếu server/DB lỗi
+                    if (QuizController.totalQuestions === 0) {
+                        QuizController.totalQuestions = 15;
+                        QuizController.init();
+                    }
+                }
+            };
+        });
+    </script>
+</body>
+
+</html>

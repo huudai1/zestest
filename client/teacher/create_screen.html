@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zestest - All Steps</title>
+    
+<link rel="stylesheet" href="/static/css/improve.css">
+<link rel="stylesheet" href="/static/css/zestest-main.css">
+</head>
+<body>
+
+    <div class="step-page active" id="step1">
+    <header class="top-nav">
+    <button type="button" class="nav-btn prev1" data-i18n="prev">← Trước</button>
+    <span class="step-indicator"><span data-i18n="step">Bước</span> 1</span>
+    <button type="button" class="nav-btn next1" data-i18n="next">Tiếp →</button>
+</header>
+
+<div class="form-group">
+    <label data-i18n="exam_name">Exam Name</label>
+    <input type="text" class="input-line" data-i18n-placeholder="exam_placeholder" placeholder="Nhập tên bài thi...">
+</div>
+
+    <div class="form-group">
+        <label data-i18n="q_count">Số lượng câu hỏi</label>
+        <input type="number" class="input-line" placeholder="0">
+    </div>
+
+    <div class="form-group">
+        <label data-i18n="duration">Thời gian làm bài (Phút)</label>
+        <input type="number" class="input-line" placeholder="0">
+    </div>
+
+    <div class="upload-zone">
+        <span data-i18n="upload_title">Tải đề bài lên</span>
+        <small style="font-size: 10px; color: #444;" data-i18n="upload_sub">PDF, Word hoặc Hình ảnh</small>
+    </div>
+</div>
+
+    <div class="step-page" id="step2">
+        <header class="top-nav">
+            <button type="button" class="nav-btn prev2" data-i18n="prev">← Trước</button>
+            <span class="step-indicator">Bước 2</span>
+            <button type="button" class="nav-btn next2" data-i18n="next">Tiếp →</button>
+        </header>
+        <div class="preview-box">
+    <div id="preview-content"></div>
+</div>
+    
+        <button class="btn-add-type" onclick="openTypeModal()">
+            <span data-i18n="add_type">Thêm loại câu hỏi khác (nếu có)</span>
+            <div class="icon-plus">+</div>
+        </button>
+
+            <div class="type-list" id="main-type-list">
+        </div>
+    </div>
+
+    <div class="step-page" id="step3">
+    <header class="top-nav">
+        <button type="button" class="nav-btn prev3" data-i18n="edit">
+            <i class="fas fa-chevron-left"></i> Sửa bố cục
+        </button>
+        <span class="step-indicator" data-i18n="check_title">Bước 3: Kiểm tra</span>
+        <button type="button" class="nav-btn next3 success" data-i18n="done">Xong</button>
+    </header>
+
+    <main class="main-layout-step3">
+        <div class="instruction-text" data-i18n="instruction_s3">
+            Bấm vào từng câu để chỉnh sửa nhanh đáp án
+        </div>
+        
+        <div class="full-grid-scroll">
+            <div id="abcd-fields-container"></div>
+        </div>
+    </main>
+</div>
+
+<div id="cancelModal" class="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-message" data-i18n="confirm_cancel">Bạn muốn hủy tạo?</div>
+        <div class="modal-actions">
+            <button class="btn-cancel btn-red" onclick="confirmCancel()" data-i18n="yes">YES</button>
+            <button class="btn-cancel btn-green" onclick="Step2ModalLogic.closeAllModals()" data-i18n="no">NO</button>
+        </div>
+    </div>
+</div>
+
+<div id="generalModal" class="modal-overlay">
+    <div class="modal-box" id="modal-container">
+        <div class="modal-header">
+            <div class="modal-title" id="general-modal-title">Thiết lập</div>
+        </div>
+
+        <div class="modal-body">
+    <div id="range-input-section" style="display: none;" class="range-inputs">
+        <div class="range-item"><span data-i18n="from">Từ</span><input type="number" id="input-from" class="num-input"></div>
+        <div class="range-item"><span data-i18n="to">Đến</span><input type="number" id="input-to" class="num-input"></div>
+    </div>
+
+    <div id="audio-setup-section" style="display: none;" class="audio-setup-container">
+        <div class="audio-header">
+            <span id="audio-label" data-i18n="audio_upload">🎵 Tải file Audio</span>
+            <span id="audio-badge" class="badge-opt" data-i18n="badge">Tùy chọn</span>
+        </div>
+        <div id="audio-dropzone" class="audio-dropzone" onclick="document.getElementById('audio-file-input').click()">
+            <span class="file-status" data-i18n="audio_placeholder">Nhấn vào đây để tải file (.mp3, .wav)</span>
+            <input type="file" id="audio-file-input" hidden accept="audio/*" onchange="updateFileName(this)">
+        </div>
+    </div>
+
+    <div id="master-input-section" style="display: none;" class="master-input-box">
+        <textarea id="modal-master-input" class="master-textarea" placeholder="Ví dụ: 1A 2B 3C..."></textarea>
+    </div>
+
+    <div id="dynamic-rows-container" class="input-list dynamic-scroll"></div>
+</div>
+
+        <div class="modal-footer modal-actions" id="general-modal-footer">
+            </div>
+    </div>
+</div>
+
+<div id="loadingModal" class="modal-overlay">
+    <div class="modal-box loading-box">
+        <div class="spinner"></div>
+        <div class="modal-message" style="border:none; margin-top:15px;">Đang xử lý dữ liệu...</div>
+    </div>
+</div>
+
+<div id="processing-overlay">
+    <div class="loader-modal">
+        <div class="educational-loader"></div>
+        <div class="log-window" id="log-container"></div>
+        <p id="process-status" data-i18n="process">Đang chuẩn bị dữ liệu...</p>
+    </div>
+</div>
+
+<div id="step2IntroModal" class="modal-overlay">
+    <div class="modal-box intro-modal-box">
+        <div class="intro-title" data-i18n="intro_title">💡 Hướng dẫn Bước 2</div>
+        
+        <div class="intro-content">
+            <div class="intro-highlight" data-i18n="intro_desc">
+                ✅ Bước này dùng để chia phần cho đề thi: 
+            </div>
+            <ul>
+                <li data-i18n="intro_li_listening">Đề có Đúng/Sai, Trả lời ngắn: Bấm '+' để khai báo.</li>
+                <li data-i18n="intro_li_tf">Đề có Đúng/Sai, Trả lời ngắn: Bấm '+' để khai báo.</li>
+                <li data-i18n="intro_li_abcd">Đề có trắc nghiệm ABCD: Bấm '+' để khai báo.</li>
+            </ul>
+        </div>
+
+        <div class="modal-actions intro-actions">
+            <button class="btn-done" onclick="closeStep2Intro(false)" data-i18n="done_ỉntro">Đã hiểu</button>
+            <button class="btn-never-show" onclick="closeStep2Intro(true)" data-i18n="turn_off_next_time">Không hiện lại lần sau</button>
+        </div>
+    </div>
+</div>
+
+<div id="processing-overlay">
+    <div class="loader-modal">
+        <div class="educational-loader"></div>
+        
+        <div class="log-window" id="log-container">
+            </div>
+        
+        <p id="process-status" data-i18n="process">Đang chuẩn bị dữ liệu...</p>
+    </div>
+</div>
+    <script src="/static/js/navigation.js"></script>
+    <script src="/static/js/modal_logic.js"></script>
+    <script src="/static/js/storage_manager.js"></script>
+    <script src="/static/js/session_manager.js"></script>
+    <script src="/static/js/app.js"></script>
+    <script src="/static/js/i18n.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js"></script>
+    <script src="https://unpkg.com/jszip/dist/jszip.min.js"></script>
+    <script src="https://unpkg.com/docx-preview/dist/docx-preview.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
+    <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+    <script src="/static/js/step1/step1_handler.js"></script>
+    <script src="/static/js/step1/input_handler/pdf_processor.js"></script>
+    <script src="/static/js/step1/input_handler/docx_processor.js"></script>
+    <script src="/static/js/step1/input_handler/image_processor.js"></script>
+    <script src="/static/js/step1/input_handler/input_classifier.js"></script>
+
+    <script src="/static/js/step2/range_validator.js"></script>
+    <script src="/static/js/step2/audio_processor.js"></script>
+    <script src="/static/js/step2/preview_render.js"></script>
+    <script src="/static/js/step2/question_types.js"></script>
+    <script src="/static/js/step2/step2_card_logic.js"></script>
+    <script src="/static/js/step2/step2_card_render.js"></script>
+
+    <script src="/static/js/step3/TypeChecker.js"></script>
+    <script src="/static/js/step3/step3_ui_render.js"></script>
+    <script src="/static/js/step3/UniversalNormalizer.js"></script>
+    <script src="/static/js/step3/step3_handler.js"></script>
+    <script src="/static/js/step3/step3_controller.js"></script>
+    <script src="/static/js/step3/improve.js"></script>
+
+    <script>
+    // Ngay khi trang 3 bước vừa hiện ra, khởi tạo FFmpeg luôn trong lúc người dùng đang gõ Step 1
+    window.addEventListener('load', () => {
+        AudioProcessor.init();
+    });
+</script>
+
+<script>
+        // Check ngay lập tức để tránh "Flash of unstyled content"
+        (function() {
+            const isMobile = window.innerWidth <= 768;
+            document.body.classList.add(isMobile ? 'is-mobile' : 'is-pc');
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,401 @@
+/* ================= DETAIL VIEW V2.1 - 80/10/10 HYBRID ================= */
+:root {
+    --bg-dark: #000000;
+    --panel-bg: #181818;
+    --accent-blue: #2196f3;
+    --thin-border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    height: 100dvh;
+    overflow: hidden;
+    position: fixed;
+    width: 100vw;
+}
+
+.detail-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* ================= TOOLBAR (10% ~ 55px) ================= */
+.toolbar {
+    height: 55px; /* Chiếm khoảng 10% màn hình mobile */
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    gap: 6px;
+    background: #121212;
+    border-bottom: var(--thin-border);
+    flex-shrink: 0;
+}
+
+.tool-btn {
+    height: 36px;
+    border: none;
+    border-radius: 4px;
+    padding: 0 12px;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.btn-gray { background: #333; color: #fff; }
+.btn-red { background: #b71c1c; color: #fff; }
+.btn-lime { background: #cddc39; color: #000; flex-grow: 1; }
+
+/* ================= VIEWER WINDOW (80% - TRÀN VIỀN) ================= */
+.viewer-window {
+    flex: 1; /* Sẽ chiếm khoảng 80% không gian còn lại */
+    overflow-y: auto;
+    background: #121212;
+    /* Xóa margin và border blue dày cũ để tràn viền */
+    margin: 0; 
+    border: none; 
+    border-bottom: var(--thin-border);
+    -webkit-overflow-scrolling: touch;
+}
+
+.viewer-window::-webkit-scrollbar { display: none; }
+
+.webp-container img {
+    width: 100%;
+    display: block;
+    /* Chống mờ ảnh khi zoom */
+    image-rendering: -webkit-optimize-contrast;
+}
+
+/* ================= DETAIL VIEW V2.3 - SLIM PILL STYLE ================= */
+
+.interaction-panel {
+    background: #111;
+    padding: 10px 15px;
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
+    flex-shrink: 0;
+    border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.question-info {
+    margin-bottom: 8px;
+    font-size: 11px;
+    font-weight: 900;
+    color: #2196f3;
+}
+
+/* Thêm màu cho Row Label để dễ phân biệt */
+.row-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    width: 65px;
+}
+
+/* Màu xanh nhạt cho phần bài làm của học sinh */
+.answer-row:first-of-type .row-label {
+    color: #4db6ac; 
+}
+
+/* Màu vàng/cam nhạt cho phần đáp án chuẩn */
+.answer-row:last-of-type .row-label {
+    color: #ffb74d; 
+}
+
+.option-group {
+    display: flex; /* Đổi từ grid sang flex để mỏng hơn */
+    gap: 4px;
+    flex: 1;
+}
+
+/* Biến opt-box thành dạng thanh mảnh (Pill) */
+.opt-box {
+    flex: 1;
+    height: 18px; /* Siêu mỏng */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px; /* Bo tròn hẳn thành dạng kén */
+    font-weight: 800;
+    font-size: 10px;
+    border: none;
+    color: #fff;
+    opacity: 0.9;
+}
+
+/* Màu sắc của các Pill - Làm dịu tông màu xuống cho sang */
+.bg-teal   { background: #00796b; }
+.bg-coral  { background: #c62828; }
+.bg-green  { background: #2e7d32; }
+.bg-purple { background: #6a1b9a; }
+
+/* Tùy chọn: Nếu câu đó sai, ông có thể cho cái Pill đó mờ đi (opacity) 
+   hoặc chỉ highlight đúng cái chữ cái học sinh chọn. */
+
+.answer-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+/* True/False Section */
+.tf-box { 
+    height: 24px; 
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-weight: 800;
+    flex: 1;
+}
+
+.tf-box.wrong { 
+    background: rgba(211, 47, 47, 0.2); 
+    color: #ff5252;
+    border: 1px solid #d32f2f;
+}
+
+.tf-box.correct { 
+    background: rgba(0, 200, 83, 0.2); 
+    color: #00c853;
+    border: 1px solid #00c853;
+}
+
+/* Essay Section */
+.essay-label {
+    font-size: 10px;
+    color: #ffb74d;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.essay-content {
+    background: #1a1a1a;
+    padding: 8px;
+    border-radius: 6px;
+    color: #a5d6a7;
+    font-size: 11px;
+    line-height: 1.4;
+    border-left: 2px solid #2e7d32;
+}
+
+/* ================= MODAL & GRID SYSTEM ================= */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.85);
+    backdrop-filter: blur(5px);
+    display: none; /* Ẩn mặc định */
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: #181818;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    display: flex;
+    flex-direction: column;
+    max-height: 80vh;
+}
+
+.modal-header {
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #222;
+    font-weight: 900;
+    font-size: 13px;
+    color: #2196f3;
+}
+
+.close-modal {
+    background: none; border: none; color: #888; font-size: 20px;
+}
+
+.modal-body {
+    padding: 15px;
+    overflow-y: auto;
+}
+
+.question-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 cột cho mobile */
+    gap: 8px;
+}
+
+.grid-item {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+    background: #222;
+    position: relative;
+}
+
+/* Các trạng thái màu sắc */
+.grid-item.correct { border: 1px solid #2ecc71; color: #2ecc71; }
+.grid-item.wrong { border: 1px solid #e74c3c; color: #e74c3c; }
+.grid-item.empty { border: 1px solid #f1c40f; color: #f1c40f; }
+
+.grid-item i {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    font-size: 8px;
+    font-style: normal;
+}
+
+.modal-footer {
+    padding: 10px;
+    border-top: 1px solid #222;
+}
+
+.legend {
+    display: flex;
+    justify-content: space-around;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.leg-item i { margin-right: 4px; font-style: normal; }
+.v-green { color: #2ecc71; }
+.x-red { color: #e74c3c; }
+.exc-gold { color: #f1c40f; }
+
+/* ================= PAGE 0: SẢNH CHỜ (Đồng bộ CSS gốc) ================= */
+#page-name {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background-color: #181818; /* Khớp với app-container */
+    height: 100dvh;
+}
+
+.lobby-card {
+    width: 100%;
+    max-width: 350px;
+    background: #121212; /* Khớp với header */
+    padding: 30px 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.lobby-logo {
+    font-size: 32px;
+    font-weight: 900;
+    color: #2ecc71; /* Màu nhấn xanh lá từ current-q-view */
+    margin-bottom: 10px;
+    letter-spacing: -1px;
+}
+
+.lobby-subtitle {
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 25px;
+}
+
+.input-group {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.stu-input {
+    width: 100%;
+    height: 50px;
+    background: #222;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 0 15px;
+    color: #fff;
+    font-size: 16px;
+    font-family: inherit;
+    outline: none;
+    transition: border 0.3s ease;
+}
+
+.stu-input:focus {
+    border-color: #2ecc71;
+    background: #1a1a1a;
+}
+
+.btn-start-quiz {
+    width: 100%;
+    height: 50px;
+    background: #28a745; /* Khớp với btn-main green */
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 900;
+    font-size: 15px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: transform 0.1s active;
+}
+
+.btn-start-quiz:active {
+    transform: scale(0.98);
+    filter: brightness(1.2);
+}
+
+.lobby-footer {
+    margin-top: 30px;
+    font-size: 10px;
+    color: #444;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+@media (min-width: 768px) {
+    .fixed-footer {
+        height: calc(100dvh - 50px) !important;
+        overflow: hidden !important; /* Khóa footer ngoài cùng */
+        display: block !important;
+        background: #121212;
+    }
+
+    .answer-swiper {
+        height: 100% !important; /* Quan trọng: Cho phép swiper full chiều cao */
+        overflow-y: auto !important; /* Cho phép cuộn DỌC ở đây */
+        overflow-x: hidden !important;
+        pointer-events: auto !important; /* Đảm bảo chuột click được */
+    }
+
+    #main-wrapper {
+        display: flex !important;
+        flex-direction: column !important;
+        transform: translate3d(0, 0, 0) !important;
+        transition: none !important;
+        height: auto !important;
+        padding-bottom: 50px; /* Thêm khoảng trống ở cuối để dễ cuộn */
+    }
+
+    .pc-question-block {
+        background: #1e1e1e;
+        margin-bottom: 15px;
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid #333;
+    }
+}

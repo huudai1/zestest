@@ -1,0 +1,325 @@
+/* ============================================================
+   0. ROOT & THEMES (LIGHT DEFAULT, DARK TOGGLE)
+   ============================================================ */
+:root {
+    /* 🌞 LIGHT MODE (DEFAULT) */
+    --bg-color: #f8f9fa;
+    --card-bg: #ffffff;
+    --text-main: #212529;
+    --text-sub: #6c757d;
+    --btn-gray: #e9ecef;
+    --border-color: #ced4da;
+    --input-bg: #ffffff;
+    
+    --primary-blue: #0095ff;
+    --primary-green: #28a745;
+    --danger-red: #ff4d4d;
+    
+    --banner-bg: #f1f3f5;
+    --banner-border: #adb5bd;
+}
+
+body.dark-mode {
+    /* 🌙 DARK MODE */
+    --bg-color: #121212;
+    --card-bg: #1a1a1a;
+    --text-main: #ffffff;
+    --text-sub: #b0b0b0;
+    --btn-gray: #2a2a2a;
+    --border-color: #333333;
+    --input-bg: #1a1a1a;
+    
+    --banner-bg: #181818;
+    --banner-border: #444444;
+}
+
+/* ============================================================
+   1. GLOBAL LAYOUT (MOBILE FIRST)
+   ============================================================ */
+body {
+    display: flex;
+    justify-content: center;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    margin: 0;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Container dùng chung (Trên HTML đổi class này thành dashboard-container cho chuẩn nghĩa cũng được) */
+.mobile-container {
+    width: 100%;
+    max-width: 375px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* ============================================================
+   2. TOP BAR & BANNER
+   ============================================================ */
+.top-bar { display: flex; align-items: center; gap: 10px; padding: 0 4px 0 0; }
+.menu-icon { font-size: 26px; padding: 6px 8px 6px 0; cursor: pointer; }
+
+.badge {
+    background: var(--btn-gray); padding: 4px 8px; border-radius: 4px;
+    font-size: 12px; border: 1px solid var(--border-color); color: var(--text-main);
+    box-shadow: 0 1px 1px rgba(0,0,0,0.03);
+}
+
+.btn-register {
+    background: var(--primary-blue); border: none; color: white;
+    padding: 8px 16px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-left: auto;
+}
+
+.banner {
+    width: 100%; height: 124px; border: 1px dashed var(--banner-border);
+    border-radius: 12px; background: var(--banner-bg); display: flex;
+    align-items: center; justify-content: center; color: var(--text-sub); cursor: pointer;
+    transition: all 0.2s;
+}
+.banner:active { transform: scale(0.98); }
+
+.btn-create {
+    background: var(--primary-green); color: white; border: none; padding: 14px;
+    border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; margin-bottom: 10px;
+    transition: transform 0.1s;
+}
+.btn-create:active { transform: scale(0.98); }
+
+/* ============================================================
+   3. SECTION HEADER & SEARCH
+   ============================================================ */
+.section-header { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+.section-header h2 { margin: 0; font-size: 18px; }
+
+.search-bar {
+    background: var(--input-bg); border: 1px solid var(--border-color);
+    color: var(--text-main); padding: 10px 14px; border-radius: 10px;
+    width: 170px; font-size: 14px; transition: border-color 0.2s; outline: none;
+}
+.search-bar:focus { border-color: var(--primary-blue); }
+
+/* ============================================================
+   4. EXAM LIST & CARDS (FULL-WIDTH LIST)
+   ============================================================ */
+.exam-list {
+    display: flex !important;
+    flex-direction: column !important; /* Ép xếp hàng dọc */
+    width: 100% !important;
+    gap: 16px;
+    padding: 10px 0;
+    
+    border: none !important; 
+    max-height: none !important; 
+    overflow: visible !important;
+    background: transparent !important;
+}
+
+.exam-card {
+    width: 100% !important; /* Luôn dãn 100% chiều ngang bất kể thiết bị */
+    box-sizing: border-box;
+    
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 18px;
+    
+    border: 1px solid var(--border-color);
+    border-left: 4px solid var(--primary-green);
+    
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+}
+
+.exam-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--primary-blue);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.exam-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+}
+
+.exam-title { 
+    font-size: 15px; 
+    font-weight: 700; 
+    color: var(--text-main);
+}
+
+.exam-time { 
+    font-size: 12px; 
+    color: var(--text-sub); 
+}
+/* ============================================================
+   4.1 RE-DESIGN BUTTON ACTIONS (PREMIUM STYLE)
+   ============================================================ */
+
+.btn-group {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.btn-action {
+    border: none;
+    outline: none;
+    padding: 12px 0;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0.5px;
+}
+
+/* Hiệu ứng nhấn (Click) chung cho tất cả nút */
+.btn-action:active {
+    transform: scale(0.92);
+}
+
+/* --- Nút START (Xanh Success) --- */
+.btn-action.primary {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+}
+
+.btn-action.primary:hover {
+    box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+    filter: brightness(1.1);
+}
+
+/* --- Nút DELETE (Đỏ Ruby mờ) --- */
+.btn-action.btn-delete {
+    background: rgba(231, 76, 60, 0.1); /* Nền đỏ rất nhẹ */
+    color: #e74c3c !important;
+    border: 1.5px solid rgba(231, 76, 60, 0.3);
+}
+
+.btn-action.btn-delete:hover {
+    background: #e74c3c; /* Rực đỏ khi hover */
+    color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+    border-color: #e74c3c;
+}
+
+/* --- Nút PHỤ (Sửa, Info) --- */
+.btn-action:not(.primary):not(.btn-delete) {
+    background: var(--btn-gray);
+    color: var(--text-main);
+    border: 1.5px solid var(--border-base);
+}
+
+.btn-action:not(.primary):not(.btn-delete):hover {
+    background: var(--text-main);
+    color: var(--bg-card) !important; /* Đảo màu khi hover nhìn rất nghệ */
+    border-color: var(--text-main);
+}
+
+/* Tối ưu PC Full Window */
+@media screen and (min-width: 769px) {
+    .btn-action {
+        font-size: 14px;
+        padding: 14px 0;
+    }
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-dim);
+}
+
+.empty-icon {
+    font-size: 50px;
+    margin-bottom: 15px;
+    opacity: 0.3;
+}
+
+.empty-state p {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: var(--text-main);
+}
+
+.empty-state span {
+    font-size: 14px;
+    opacity: 0.6;
+}
+
+/* Thêm một cái gạch chân nhẹ dưới tiêu đề All Exams cho ra dáng */
+.section-header {
+    border-bottom: 2px solid var(--border-light);
+    padding-bottom: 10px;
+    margin-bottom: 25px !important;
+}
+
+/* ============================================================
+   RESPONSIVE: GIỮ NGUYÊN KIỂU LIST TRÊN PC
+   ============================================================ */
+@media screen and (min-width: 769px) {
+    .mobile-container {
+        max-width: 1100px !important; /* Container bung rộng để Search bar dãn ra */
+        width: 95%;
+    }
+
+    .exam-list {
+        /* Xóa bỏ chia cột, giữ nguyên 1 cột dọc */
+        grid-template-columns: none !important; 
+    }
+
+    .exam-card {
+        padding: 20px 25px; /* PC cho card to cao hơn chút nhìn cho sang */
+    }
+
+    .exam-title {
+        font-size: 18px; /* Chữ to hơn cho PC */
+    }
+}
+
+/* ============================================================
+   5. PC RESPONSIVE (Màn hình > 768px)
+   ============================================================ */
+@media screen and (min-width: 769px) {
+    body { padding: 40px; }
+    
+    .mobile-container { 
+        max-width: 1000px; /* Bung rộng bằng chuẩn màn PC */
+        margin: 0 auto; 
+        gap: 20px;
+    }
+
+    .banner { height: 160px; font-size: 18px; }
+    .btn-create { padding: 18px; font-size: 18px; }
+    
+    .section-header h2 { font-size: 22px; }
+    .search-bar { width: 250px; font-size: 15px; }
+
+    .exam-list {
+        display: grid; /* Chuyển thành dạng lưới 2 cột */
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        padding: 20px;
+        max-height: 600px;
+    }
+    .exam-card { margin-bottom: 0; } /* Reset margin vì đã có gap của grid */
+    .btn-action { padding: 14px 0; font-size: 14px; }
+}
+
