@@ -2,7 +2,19 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "server",
   "main": "src/index.ts",
-  "compatibility_date": "2026-05-02"
+  "compatibility_date": "2026-05-02",
+  "triggers": {
+    "crons": [
+      "0 0 * * *"
+    ]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "zestest_db",
+      "database_id": "dán-cái-id-lấy-từ-dashboard-vào-đây"
+    }
+  ]
   // "compatibility_flags": [
   //   "nodejs_compat"
   // ],
@@ -19,13 +31,6 @@
   //   {
   //     "binding": "MY_BUCKET",
   //     "bucket_name": "my-bucket"
-  //   }
-  // ],
-  // "d1_databases": [
-  //   {
-  //     "binding": "MY_DB",
-  //     "database_name": "my-database",
-  //     "database_id": ""
   //   }
   // ],
   // "ai": {
