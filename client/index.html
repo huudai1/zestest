@@ -341,71 +341,41 @@
     <script type="module" src="/static/js/auth/auth.js"></script>
 
     <script>
-    const statuses = document.querySelectorAll('.status-item');
-    let currentStatus = 0;
+// 1. Hàm kiểm tra server Hono đã sống chưa
+const checkServer = async () => {
+    try {
+        const res = await fetch('/api/stats'); // Gọi đến route bạn viết trong index.ts
+        if (res.ok) return true;
+    } catch (e) { return false; }
+};
 
-function showPage(pageId) {
-    const pages = ['splash-screen', 'dashboard-page', 'create-steps-page'];
-    
-    pages.forEach(id => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        if (id === pageId) {
-            el.classList.add('active');
-            el.style.display = 'flex'; 
-            el.style.opacity = "1"; 
-        } else {
-            el.classList.remove('active');
-            el.style.display = 'none';
-        }
-    });
-    
-    window.scrollTo(0, 0);
-    document.body.style.opacity = "1";
+const statuses = document.querySelectorAll('.status-item');
+let currentStatus = 0;
 
-    // Hook sau khi chuyển trang
-    if (pageId === 'dashboard-page' && typeof DashboardManager !== 'undefined') {
-        DashboardManager.checkFinalStatus();
-    }
-    if (pageId === 'dashboard-page' && typeof DashboardManager !== 'undefined') {
-    DashboardManager.checkFinalStatus();
-    if (typeof ExamCard !== 'undefined') ExamCard.render(); // thêm check typeof
-    }
-}
-
-const changeStatus = () => {
-        if (currentStatus < statuses.length - 1) {
-            statuses[currentStatus].classList.remove('active');
-            currentStatus++;
-            statuses[currentStatus].classList.add('active');
-        } else {
+const changeStatus = async () => {
+    if (currentStatus < statuses.length - 1) {
+        statuses[currentStatus].classList.remove('active');
+        currentStatus++;
+        statuses[currentStatus].classList.add('active');
+    } else {
+        // ĐỢI SERVER PHẢN HỒI THẬT THÌ MỚI VÀO DASHBOARD
+        const isServerUp = await checkServer();
+        if (isServerUp) {
             clearInterval(statusInterval);
-            
-            // HIỆU ỨNG CHUYỂN CẢNH
             const splash = document.getElementById('splash-screen');
-            splash.style.transition = "opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1)";
             splash.style.opacity = "0";
-
-            // Đợi mờ dần xong mới tráo đổi DIV
             setTimeout(() => {
                 showPage('dashboard-page');
-                // Xóa hẳn splash để giải phóng tài nguyên
-                splash.style.display = 'none'; 
+                splash.style.display = 'none';
             }, 400);
+        } else {
+            // Nếu server chưa phản hồi, giữ nguyên ở dòng "Đang kết nối..."
+            console.log("Đang đợi Hono API...");
         }
-    };
+    }
+};
 
-    const statusInterval = setInterval(changeStatus, 600);
-
-    // Tự động điền tên
-    (function initSplash() {
-        const savedName = localStorage.getItem('zestest_user_name') || 'Giáo viên Zestest';
-        const nameEl = document.querySelector('.teacher-name');
-        if (nameEl) nameEl.innerText = savedName;
-    })();
-
-    window.DashboardManager = window.DashboardManager || {};
-    window.DashboardManager.goToCreate = () => showPage('create-steps-page');
+const statusInterval = setInterval(changeStatus, 800);
 </script>
 </body>
 </html>
