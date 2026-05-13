@@ -1,0 +1,139 @@
+/* --- NÚT GẠT PHIÊN BẢN TO (CÓ CHỮ) --- */
+.switch-container-header {
+    display: flex;
+    align-items: center;
+    margin: 0 5px;
+}
+
+#mode-toggle { display: none; }
+
+.switch-label-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+    width: 85px;  /* Tăng chiều ngang để đủ chỗ chứa chữ */
+    height: 30px; /* Tăng chiều cao một chút cho dễ bấm */
+    background: #333; 
+    border-radius: 30px; 
+    cursor: pointer; 
+    position: relative;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 0 8px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+/* Style cho chữ Sáng/Tối */
+.text-light, .text-dark {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 10px;
+    font-weight: 800;
+    font-family: 'Inter', sans-serif;
+    user-select: none;
+    z-index: 1;
+    color: #888;
+    border-radius: 30px;
+    transition: all 0.3s;
+}
+
+/* Làm sáng chữ và thêm nền khi được chọn */
+#mode-toggle:checked + .switch-label-header .text-dark { 
+    background: #2ecc71;
+    color: #fff; 
+}
+
+#mode-toggle:not(:checked) + .switch-label-header .text-light { 
+    background: #fff;
+    color: #000; 
+}
+
+/* Tắt logic bi chạy cũ */
+.ball-header, .current-icon { display: none; }
+
+/* --- GIỮ NGUYÊN CSS ANIMATION CỦA BẠN (Sửa Z-index cực cao) --- */
+.transition-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 99999; /* Đảm bảo đè lên Dashboard */
+    display: none; pointer-events: none;
+    transform: translateY(-100%);
+}
+
+.scene-bg {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: #2a2a2a; z-index: 1;
+}
+
+.card-scene { width: 100%; height: 100%; perspective: 2000px; position: relative; z-index: 2; }
+.card { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; }
+
+.card-face {
+    position: absolute; 
+    width: 100%; 
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    
+    /* 1. BO GÓC NHẸ: Bạn có thể chỉnh 10px-20px tùy ý */
+    border-radius: 15px; 
+    
+    box-sizing: border-box; /* Bắt buộc để padding không làm nở box */
+}
+
+/* 2. VIỀN TO HƠN: Đổi từ 3px lên 8px hoặc 10px cho rõ rệt */
+.card-front { 
+    background-color: #fff; 
+    border: 8px solid rgba(0,0,0,0.3); /* Viền đậm hơn */
+    color: #333; 
+}
+
+.card-back { 
+    background-color: #1e1e1e; 
+    transform: rotateY(180deg); 
+    border: 8px solid rgba(255,255,255,0.3); /* Viền sáng đậm hơn */
+    color: #f0f0f0; 
+}
+
+.icon-circle { font-size: 80px; } /* Thu nhỏ icon lại tí cho cân đối */
+
+/* Animation hạ toàn màn hình xuống */
+@keyframes fullTransitionWithBg {
+    0% { transform: translateY(-100%); }
+    25% { transform: translateY(0); }   /* Chạm đáy màn hình */
+    75% { transform: translateY(0); }   /* Giữ yên để lật bài */
+    100% { transform: translateY(-100%); } /* Nhấc lên lại */
+}
+
+@keyframes flipToDark {
+    0%, 25% { transform: rotateY(0deg); }
+    75%, 100% { transform: rotateY(180deg); }
+}
+
+@keyframes flipToLight {
+    0%, 25% { transform: rotateY(180deg); }
+    75%, 100% { transform: rotateY(0deg); }
+}
+
+/* Các Class kích hoạt animation */
+.animate-active { 
+    display: block !important; 
+    animation: fullTransitionWithBg 1.8s forwards cubic-bezier(0.5, 0, 0.5, 1); 
+}
+
+.flipping-to-dark { 
+    animation: flipToDark 1.8s forwards cubic-bezier(0.5, 0, 0.5, 1); 
+}
+
+.flipping-to-light { 
+    animation: flipToLight 1.8s forwards cubic-bezier(0.5, 0, 0.5, 1); 
+}
+
+/* Thêm màu cho body để thấy sự khác biệt */
+body.dark-mode { background-color: #121212; color: white; }
+body.light-mode { background-color: #ffffff; color: black; }

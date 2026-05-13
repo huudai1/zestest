@@ -1,3 +1,7 @@
-/lobby/*    /student/index.html    200
-/api/*      /api/:splat            200
-/*          /index.html            200
+# 1. Giữ nguyên các file tĩnh (js, css, hình ảnh)
+
+
+
+# 3. Điều hướng cho Học sinh (Trỏ về thư mục, không trỏ vào file .html)
+/lobby/*   /static/student/        200
+

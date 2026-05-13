@@ -1,6 +1,23 @@
 name = "zestest-api"
-main = "server/src/index.ts" # Thêm chữ server/ vào đầu
+main = "server/src/index.ts"
 compatibility_date = "2026-05-02"
 
 [assets]
-directory = "./client" # Thêm dòng này để nó tự hiểu folder giao diện
+directory = "client"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "zestest_db"
+database_id = "d721dafb-8c29-4ad8-925f-6a7394bf5428"
+
+[[durable_objects.bindings]]
+name = "MONITOR_ROOM"
+class_name = "ExamRoom"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["ExamRoom"]
+
+[[r2_buckets]]
+binding = "R2_BUCKET"
+bucket_name = "zestest-exams"

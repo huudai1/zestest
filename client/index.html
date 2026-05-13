@@ -1,316 +1,416 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/css/splash.css">
     <link rel="stylesheet" href="/static/css/zestest-main.css">
     <link rel="stylesheet" href="/static/css/style.css">
     <link rel="stylesheet" href="/static/css/card.css">
     <link rel="stylesheet" href="/static/css/improve.css">
+    <link rel="icon" type="image/png" href="/favicon.png">
 </head>
+
 <body>
 
+    <script src="/coi-serviceworker.js"></script>
     <div id="splash-screen" class="active">
-    <div class="loading-wrapper">
-        <div class="brand-context">
-            <p class="welcome-msg">Chào mừng bạn đến với</p>
-            <h1 class="teacher-name">Tên lớp của User</h1>
-        </div>
-
-        <div class="impressive-loader">
-            <div class="cube-wrapper">
-                <div class="cube cube-1"></div>
-                <div class="cube cube-2"></div>
-                <div class="cube cube-3"></div>
+        <div class="loading-wrapper">
+            <div class="brand-context">
+                <p class="welcome-msg">Chào mừng bạn đến với</p>
+                <h1 class="teacher-name">Tên lớp của User</h1>
             </div>
-            <div class="status-texts">
-                <p class="status-item active">Đang kết nối server Zestest...</p>
-                <p class="status-item">Kiểm tra danh sách câu hỏi...</p>
-                <p class="status-item">Đang khởi tạo...</p>
-                <p class="status-item">Sẵn sàng! Đang vào dashboard...</p>
-            </div>
-        </div>
 
-        <div class="powered-by">Powered by <span>Zestest</span></div>
+            <div class="impressive-loader">
+                <div class="cube-wrapper">
+                    <div class="cube cube-1"></div>
+                    <div class="cube cube-2"></div>
+                    <div class="cube cube-3"></div>
+                </div>
+                <div class="status-texts">
+                    <p class="status-item active" data-i18n="splash_connecting">Đang kết nối server Zestest...</p>
+                    <p class="status-item" data-i18n="splash_checking">Kiểm tra danh sách câu hỏi...</p>
+                    <p class="status-item" data-i18n="splash_init">Đang khởi tạo...</p>
+                    <p class="status-item" data-i18n="splash_ready">Sẵn sàng! Đang vào dashboard...</p>
+                </div>
+            </div>
+
+            <div class="powered-by">Powered by <span>Zestest</span></div>
+        </div>
     </div>
-</div>
 
     <div id="dashboard-page" style="display: none;">
         <div class="mobile-container">
-    <div class="top-bar">
-        <div class="lang-dropdown">
-    <button class="lang-dropbtn" onclick="toggleLangMenu()">
-        <span id="current-lang-flag">🇻🇳</span>
-        <span id="current-lang-code">VI</span>
-        <i class="arrow-down"></i>
-    </button>
-    <div id="lang-content" class="lang-dropdown-content">
-        <div class="lang-item" onclick="I18n.setLocale('vi')">
-            <span>🇻🇳</span> Tiếng Việt
-        </div>
-        <div class="lang-item" onclick="I18n.setLocale('en')">
-            <span>🇺🇸</span> English
-        </div>
-        <div class="lang-item" onclick="I18n.setLocale('jp')">
-            <span>🇯🇵</span> 日本語
-        </div>
-    </div>
-</div>
-        <div class="switch-container-header">
-            <input type="checkbox" id="mode-toggle">
-            <label for="mode-toggle" class="switch-label-header">
-                <span class="text-light" data-i18n="light">LIGHT</span>
-                <span class="text-dark" data-i18n="dark">DARK</span>
-            </label>
-        </div>
-        <div class="badge" data-i18n="user">Guest</div>
-        <button class="btn-register">Register</button>
-    </div>
+            <div class="top-bar">
+                <div class="lang-dropdown">
+                    <button class="lang-dropbtn" onclick="toggleLangMenu()">
+                        <span id="current-lang-flag">🇻🇳</span>
+                        <span id="current-lang-code">VI</span>
+                        <i class="arrow-down"></i>
+                    </button>
+                    <div id="lang-content" class="lang-dropdown-content">
+                        <div class="lang-item" onclick="I18n.setLocale('vi')">
+                            <span>🇻🇳</span> Tiếng Việt
+                        </div>
+                        <div class="lang-item" onclick="I18n.setLocale('en')">
+                            <span>🇺🇸</span> English
+                        </div>
+                        <div class="lang-item" onclick="I18n.setLocale('jp')">
+                            <span>🇯🇵</span> 日本語
+                        </div>
+                    </div>
+                </div>
+                <div class="switch-container-header">
+                    <input type="checkbox" id="mode-toggle">
+                    <label for="mode-toggle" class="switch-label-header">
+                        <span class="text-light" data-i18n="light">SÁNG</span>
+                        <span class="text-dark" data-i18n="dark">TỐI</span>
+                    </label>
+                </div>
+                <div class="user-tier-simple" style="display: flex; align-items: center; gap: 8px; margin-right: 15px; background: rgba(0, 149, 255, 0.1); padding: 5px 12px; border-radius: 20px; border: 1px solid rgba(0, 149, 255, 0.2);">
+                    <span style="font-size: 10px; opacity: 0.8; font-weight: 800; color: var(--primary-blue);">RANK:</span>
+                    <span id="user-tier-name" style="color: var(--primary-blue); font-weight: 900; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px;">Guest</span>
+                </div>
+                <button class="btn-logout" onclick="DashboardManager.logout()"
+                    style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #94a3b8; padding: 10px 15px; border-radius: 12px; cursor: pointer; margin-right: 10px; font-size: 13px;"
+                    data-i18n="btn_logout">Logout</button>
+                <button class="btn-register" data-i18n="btn_register">Register</button>
+            </div>
 
-    <div id="card-overlay" class="transition-overlay">
-        <div id="scene-background" class="scene-bg"></div>
-        <div class="card-scene">
-            <div id="flying-card" class="card">
-                <div class="card-face card-front"><div class="icon-circle">☀️</div></div>
-                <div class="card-face card-back"><div class="icon-circle">🌙</div></div>
+            <div id="card-overlay" class="transition-overlay">
+                <div id="scene-background" class="scene-bg"></div>
+                <div class="card-scene">
+                    <div id="flying-card" class="card">
+                        <div class="card-face card-front">
+                            <div class="icon-circle">☀️</div>
+                        </div>
+                        <div class="card-face card-back">
+                            <div class="icon-circle">🌙</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-overlay"></div>
+
+            <div class="banner" id="dashboard-upload-zone">
+                <span id="banner-text" data-i18n="banner_restore">📂 Thả file .zestest vào đây để khôi phục đề</span>
+                <span style="font-size: 10px; opacity: 0.7;">(Hoặc click để chọn file từ máy)</span>
+                <input type="file" id="hidden-zestest-input" style="display:none" accept=".zestest">
+            </div>
+
+            <button class="btn-create" onclick="DashboardManager.goToCreate()" data-i18n="create_btn">Create</button>
+            <div class="quota-container-main">
+                <div class="quota-info">
+                    <span data-i18n="total_exams">Tổng số đề:</span>
+                    <span id="quota-text-main" style="font-weight: 800;">0 / 1</span>
+                </div>
+                <div class="quota-progress-bar">
+                    <div id="quota-fill-main" class="quota-fill"></div>
+                </div>
+                <div id="global-stats-container"
+                    style="margin-top: 15px; padding: 12px; background: rgba(0, 149, 255, 0.05); border-radius: 16px; border: 1px dashed rgba(0, 149, 255, 0.2); text-align: center; cursor: pointer; transition: 0.3s;"
+                    onclick="window.open('https://www.facebook.com/share/g/1BqahgKoqA/', '_blank')">
+                    <div style="font-size: 10px; color: #64748b; margin-bottom: 4px; font-style: italic;" data-i18n="community_label">✨ Cộng đồng đã tạo</div>
+                    <div style="font-size: 18px; font-weight: 900; color: var(--primary-blue);"><span
+                            id="global-total-count">0</span><span data-i18n="community_count_suffix"> đề thi</span></div>
+                    <div
+                        style="margin-top: 8px; font-size: 11px; font-weight: 700; color: #fff; background: var(--primary-blue); display: inline-block; padding: 4px 12px; border-radius: 20px; box-shadow: 0 4px 10px rgba(0, 149, 255, 0.3);"
+                        data-i18n="community_join">Tham gia ngay 👥</div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h2 data-i18n="all_exams">All Exams</h2>
+                <input type="text" id="exam-search-bar" class="search-bar" data-i18n-placeholder="search" placeholder="Search...">
+            </div>
+
+            <div class="exam-list" id="exam-container">
             </div>
         </div>
-    </div>
 
-    <div class="modal-overlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999; justify-content:center; align-items:center; backdrop-filter: blur(5px);">
-    </div>
-
-    <div class="banner">
-        <span>Banner (Click để nhận 3 lượt)</span>
-    </div>
-
-    <button class="btn-create" onclick="DashboardManager.goToCreate()" data-i18n="create_btn">Create</button>
-    <div class="badge" data-i18n="total_exams">Tổng số đề: 0 / 3</div>
-
-    <div class="section-header">
-        <h2 data-i18n="all_exams">All Exams</h2>
-<input type="text" class="search-bar" data-i18n-placeholder="search" placeholder="Search...">
-    </div>
-
-    <div class="exam-list" id="exam-container">
+        <div id="contactModal" class="modal-overlay" onclick="if(event.target === this) toggleContactModal()">
+            <div class="modal-box contact-box">
+                <h3 data-i18n="contact_title">Liên hệ Zestest</h3>
+                <p data-i18n="contact_desc">Gặp khó khăn khi tạo đề? Kết nối ngay với mình nhé!</p>
+                <div class="contact-links">
+                    <a href="https://zalo.me/0961416095" class="contact-item zalo" target="_blank">Zalo</a>
+                    <a href="mailto:daian26092006@gmail.com" class="contact-item mail">Email</a>
+                    <a href="https://www.facebook.com/share/g/1BqahgKoqA/" class="contact-item fb" target="_blank">Facebook Community</a>
+                </div>
+                <button class="btn-done" style="margin-top: 15px; width: 100%;"
+                    onclick="toggleContactModal()" data-i18n="close">Đóng</button>
+            </div>
         </div>
-</div>
 
-<div id="contactModal" class="modal-overlay" onclick="if(event.target === this) toggleContactModal()">
-    <div class="modal-box contact-box">
-        <h3 data-i18n="contact_title">Liên hệ Zestest</h3>
-        <p data-i18n="contact_desc">Gặp khó khăn khi tạo đề? Kết nối ngay với mình nhé!</p>
-        <div class="contact-links">
-            <a href="https://zalo.me/your_phone" class="contact-item zalo">Zalo</a>
-            <a href="mailto:support@zestest.vn" class="contact-item mail">Email</a>
-            <a href="https://facebook.com/zestest" class="contact-item fb">Facebook Community</a>
+        <div id="giftKeyModal" class="modal-overlay" onclick="if(event.target === this) toggleGiftKeyModal()">
+            <div class="modal-box contact-box">
+                <h3 style="color: #f1c40f;" data-i18n="gift_title">🎁 Nhập mã quà tặng</h3>
+                <p style="font-size: 13px; color: #888;" data-i18n="gift_desc">Nhập mã PRO của bạn để kích hoạt tính năng cao cấp.</p>
+
+                <!-- Tab Nhập Mã -->
+                <div style="margin-top: 15px;">
+                    <input type="text" id="gift-key-input" class="search-bar"
+                        style="width: 100%; margin-bottom: 10px; text-align: center; font-weight: 800; text-transform: uppercase;"
+                        data-i18n-placeholder="gift_placeholder"
+                        placeholder="MÃ QUÀ TẶNG">
+
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn-done"
+                            style="width: 100%; background: #f1c40f; border-color: #f1c40f; color: #000; font-size: 14px; font-weight: 800;"
+                            onclick="DashboardManager.redeemGiftKey()" data-i18n="gift_activate">KÍCH HOẠT KEY</button>
+                    </div>
+                </div>
+
+                <button class="btn-cancel" style="margin-top: 15px; width: 100%; border: none;"
+                    onclick="toggleGiftKeyModal()" data-i18n="close">Đóng</button>
+            </div>
         </div>
-        <button class="btn-done" style="margin-top: 15px; width: 100%;" onclick="toggleContactModal()">Đóng</button>
+
+        <div class="floating-contact" onclick="toggleContactModal()">
+            <svg class="contact-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M21 11.5C21 6.52944 16.9706 2.5 12 2.5C7.02944 2.5 3 6.52944 3 11.5" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" />
+                <path
+                    d="M21 11.5C21 12.6046 20.1046 13.5 19 13.5H17C15.8954 13.5 15 12.6046 15 11.5V10.5C15 9.39543 15.8954 8.5 17 8.5H19C20.1046 8.5 21 9.39543 21 10.5V11.5Z"
+                    fill="currentColor" />
+                <path
+                    d="M3 11.5C3 12.6046 3.89543 13.5 5 13.5H7C8.10457 13.5 9 12.6046 9 11.5V10.5C9 9.39543 8.10457 8.5 7 8.5H5C3.89543 8.5 3 9.39543 3 10.5V11.5Z"
+                    fill="currentColor" />
+                <path d="M15 13.5C15 15.7091 13.2091 17.5 11 17.5H9" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" />
+            </svg>
+            <div class="contact-tooltip" data-i18n="tooltip_support">Hỗ trợ Zestest</div>
+        </div>
+
+        <div class="floating-gift" onclick="toggleGiftKeyModal()">
+            <svg class="contact-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 12V20C20 20.5523 19.5523 21 19 21H5C4.44772 21 4 20.5523 4 20V12" stroke="currentColor"
+                    stroke-width="2" stroke-linecap="round" />
+                <path d="M22 7H2V12H22V7Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+                <path d="M12 21V7" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                <path d="M12 7C12 7 12 3 10 3C8 3 8 7 12 7Z" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M12 7C12 7 12 3 14 3C16 3 16 7 12 7Z" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+            <div class="contact-tooltip" data-i18n="tooltip_gift">Quà tặng & Mời bạn</div>
+        </div>
     </div>
-</div>
-
-<div class="floating-contact" onclick="toggleContactModal()">
-    <svg class="contact-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M21 11.5C21 6.52944 16.9706 2.5 12 2.5C7.02944 2.5 3 6.52944 3 11.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        <path d="M21 11.5C21 12.6046 20.1046 13.5 19 13.5H17C15.8954 13.5 15 12.6046 15 11.5V10.5C15 9.39543 15.8954 8.5 17 8.5H19C20.1046 8.5 21 9.39543 21 10.5V11.5Z" fill="currentColor"/>
-        <path d="M3 11.5C3 12.6046 3.89543 13.5 5 13.5H7C8.10457 13.5 9 12.6046 9 11.5V10.5C9 9.39543 8.10457 8.5 7 8.5H5C3.89543 8.5 3 9.39543 3 10.5V11.5Z" fill="currentColor"/>
-        <path d="M15 13.5C15 15.7091 13.2091 17.5 11 17.5H9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-    </svg>
-    <div class="contact-tooltip">Hỗ trợ Zestest</div>
-</div>
-        </div>
 
     <div id="create-steps-page" style="display: none;">
-        <div class="step-page active" id="step1">
-    <header class="top-nav">
-    <button type="button" class="nav-btn prev1" data-i18n="prev">← Trước</button>
-    <span class="step-indicator"><span data-i18n="step">Bước</span> 1</span>
-    <button type="button" class="nav-btn next1" data-i18n="next">Tiếp →</button>
-</header>
+        <div class="mobile-container">
+            <div class="step-page active" id="step1">
+                <header class="top-nav">
+                    <button type="button" class="nav-btn prev1" data-i18n="prev">← Trước</button>
+                    <span class="step-indicator"><span data-i18n="step">Bước</span> 1</span>
+                    <button type="button" class="nav-btn next1" data-i18n="next">Tiếp →</button>
+                </header>
 
-<div class="form-group">
-    <label data-i18n="exam_name">Exam Name</label>
-    <input type="text" class="input-line" data-i18n-placeholder="exam_placeholder" placeholder="Nhập tên bài thi...">
-</div>
+                <div class="form-group">
+                    <label data-i18n="exam_name">Exam Name</label>
+                    <input type="text" class="input-line" data-i18n-placeholder="exam_placeholder"
+                        placeholder="Nhập tên bài thi...">
+                </div>
 
-    <div class="form-group">
-        <label data-i18n="q_count">Số lượng câu hỏi</label>
-        <input type="number" class="input-line" placeholder="0">
-    </div>
+                <div class="form-group">
+                    <label data-i18n="q_count">Số lượng câu hỏi</label>
+                    <input type="number" class="input-line" placeholder="0">
+                </div>
 
-    <div class="form-group">
-        <label data-i18n="duration">Thời gian làm bài (Phút)</label>
-        <input type="number" class="input-line" placeholder="0">
-    </div>
+                <div class="form-group">
+                    <label data-i18n="duration">Thời gian làm bài (Phút)</label>
+                    <input type="number" class="input-line" placeholder="0">
+                </div>
 
-    <div class="upload-zone">
-        <span data-i18n="upload_title">Tải đề bài lên</span>
-        <small style="font-size: 10px; color: #444;" data-i18n="upload_sub">PDF, Word hoặc Hình ảnh</small>
-    </div>
-</div>
-
-    <div class="step-page" id="step2">
-        <header class="top-nav">
-            <button type="button" class="nav-btn prev2" data-i18n="prev">← Trước</button>
-            <span class="step-indicator">Bước 2</span>
-            <button type="button" class="nav-btn next2" data-i18n="next">Tiếp →</button>
-        </header>
-        <div class="preview-box">
-    <div id="preview-content"></div>
-</div>
-    
-        <button class="btn-add-type" onclick="openTypeModal()">
-            <span data-i18n="add_type">Thêm loại câu hỏi khác (nếu có)</span>
-            <div class="icon-plus">+</div>
-        </button>
-
-            <div class="type-list" id="main-type-list">
-        </div>
-    </div>
-
-    <div class="step-page" id="step3">
-    <header class="top-nav">
-        <button type="button" class="nav-btn prev3" data-i18n="edit">
-            <i class="fas fa-chevron-left"></i> Sửa bố cục
-        </button>
-        <span class="step-indicator" data-i18n="check_title">Bước 3: Kiểm tra</span>
-        <button type="button" class="nav-btn next3 success" data-i18n="done">Xong</button>
-    </header>
-
-    <main class="main-layout-step3">
-        <div class="instruction-text" data-i18n="instruction_s3">
-            Bấm vào từng câu để chỉnh sửa nhanh đáp án
-        </div>
-        
-        <div class="full-grid-scroll">
-            <div id="abcd-fields-container"></div>
-        </div>
-    </main>
-</div>
-
-<div id="cancelModal" class="modal-overlay">
-    <div class="modal-box">
-        <div class="modal-message" data-i18n="confirm_cancel">Bạn muốn hủy tạo?</div>
-        <div class="modal-actions">
-            <button class="btn-cancel btn-red" onclick="confirmCancel()" data-i18n="yes">YES</button>
-            <button class="btn-cancel btn-green" onclick="Step2ModalLogic.closeAllModals()" data-i18n="no">NO</button>
-        </div>
-    </div>
-</div>
-
-<div id="generalModal" class="modal-overlay">
-    <div class="modal-box" id="modal-container">
-        <div class="modal-header">
-            <div class="modal-title" id="general-modal-title">Thiết lập</div>
-        </div>
-
-        <div class="modal-body">
-    <div id="range-input-section" style="display: none;" class="range-inputs">
-        <div class="range-item"><span data-i18n="from">Từ</span><input type="number" id="input-from" class="num-input"></div>
-        <div class="range-item"><span data-i18n="to">Đến</span><input type="number" id="input-to" class="num-input"></div>
-    </div>
-
-    <div id="audio-setup-section" style="display: none;" class="audio-setup-container">
-        <div class="audio-header">
-            <span id="audio-label" data-i18n="audio_upload">🎵 Tải file Audio</span>
-            <span id="audio-badge" class="badge-opt" data-i18n="badge">Tùy chọn</span>
-        </div>
-        <div id="audio-dropzone" class="audio-dropzone" onclick="document.getElementById('audio-file-input').click()">
-            <span class="file-status" data-i18n="audio_placeholder">Nhấn vào đây để tải file (.mp3, .wav)</span>
-            <input type="file" id="audio-file-input" hidden accept="audio/*" onchange="updateFileName(this)">
-        </div>
-    </div>
-
-    <div id="master-input-section" style="display: none;" class="master-input-box">
-        <textarea id="modal-master-input" class="master-textarea" placeholder="Ví dụ: 1A 2B 3C..."></textarea>
-    </div>
-
-    <div id="dynamic-rows-container" class="input-list dynamic-scroll"></div>
-</div>
-
-        <div class="modal-footer modal-actions" id="general-modal-footer">
+                <div class="upload-zone">
+                    <span data-i18n="upload_title">Tải đề bài lên</span>
+                    <small style="font-size: 10px; color: #444;" data-i18n="upload_sub">PDF, Word hoặc Hình ảnh</small>
+                </div>
             </div>
-    </div>
-</div>
 
-<div id="loadingModal" class="modal-overlay">
-    <div class="modal-box loading-box">
-        <div class="spinner"></div>
-        <div class="modal-message" style="border:none; margin-top:15px;">Đang xử lý dữ liệu...</div>
-    </div>
-</div>
+            <div class="step-page" id="step2">
+                <header class="top-nav">
+                    <button type="button" class="nav-btn prev2" data-i18n="prev">← Trước</button>
+                    <span class="step-indicator">Bước 2</span>
+                    <button type="button" class="nav-btn next2" data-i18n="next">Tiếp →</button>
+                </header>
+                <div class="preview-box">
+                    <div id="preview-content"></div>
+                </div>
 
-<div id="processing-overlay">
-    <div class="loader-modal">
-        <div class="educational-loader"></div>
-        <div class="log-window" id="log-container"></div>
-        <p id="process-status" data-i18n="process">Đang chuẩn bị dữ liệu...</p>
-    </div>
-</div>
+                <button class="btn-add-type" onclick="Step2ModalLogic.openTypeModal(true)">
+                    <span data-i18n="add_type">Thêm loại câu hỏi</span>
+                    <div class="icon-plus">+</div>
+                </button>
 
-<div id="step2IntroModal" class="modal-overlay">
-    <div class="modal-box intro-modal-box">
-        <div class="intro-title" data-i18n="intro_title">💡 Hướng dẫn Bước 2</div>
-        
-        <div class="intro-content">
-            <div class="intro-highlight" data-i18n="intro_desc">
-                ✅ Bước này dùng để chia phần cho đề thi: 
+                <div class="type-list" id="main-type-list">
+                </div>
             </div>
-            <ul>
-                <li data-i18n="intro_li_listening">Đề có Đúng/Sai, Trả lời ngắn: Bấm '+' để khai báo.</li>
-                <li data-i18n="intro_li_tf">Đề có Đúng/Sai, Trả lời ngắn: Bấm '+' để khai báo.</li>
-                <li data-i18n="intro_li_abcd">Đề có trắc nghiệm ABCD: Bấm '+' để khai báo.</li>
-            </ul>
-        </div>
 
-        <div class="modal-actions intro-actions">
-            <button class="btn-done" onclick="closeStep2Intro(false)" data-i18n="done_intro">Đã hiểu</button>
-            <button class="btn-never-show" onclick="closeStep2Intro(true)" data-i18n="turn_off_next_time">Không hiện lại lần sau</button>
-        </div>
-    </div>
-</div>
+            <div class="step-page" id="step3">
+                <header class="top-nav">
+                    <button type="button" class="nav-btn prev3" data-i18n="edit">
+                        <i class="fas fa-chevron-left"></i> Sửa bố cục
+                    </button>
+                    <span class="step-indicator" data-i18n="check_title">Bước 3: Kiểm tra</span>
+                    <button type="button" class="nav-btn next3 success" data-i18n="done">Xong</button>
+                </header>
 
-<div id="processing-overlay">
-    <div class="loader-modal">
-        <div class="educational-loader"></div>
-        
-        <div class="log-window" id="log-container">
+                <main class="main-layout-step3">
+                    <div class="instruction-text" data-i18n="instruction_s3">
+                        Bấm vào từng câu để chỉnh sửa nhanh đáp án
+                    </div>
+
+                    <div class="full-grid-scroll">
+                        <div id="abcd-fields-container"></div>
+                    </div>
+                </main>
             </div>
-        
-        <p id="process-status" data-i18n="process">Đang chuẩn bị dữ liệu...</p>
-    </div>
-</div>
+
+            <div id="cancelModal" class="modal-overlay">
+                <div class="modal-box">
+                    <div class="modal-message" data-i18n="confirm_cancel">Bạn muốn hủy tạo?</div>
+                    <div class="modal-actions">
+                        <button class="btn-cancel btn-red" onclick="confirmCancel()" data-i18n="yes">YES</button>
+                        <button class="btn-cancel btn-green" onclick="Step2ModalLogic.closeAllModals()"
+                            data-i18n="no">NO</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="generalModal" class="modal-overlay">
+                <div class="modal-box" id="modal-container">
+                    <div class="modal-header">
+                        <div class="modal-title" id="general-modal-title">Thiết lập</div>
+                    </div>
+
+                    <div class="modal-body">
+                        <div id="range-input-section" style="display: none;" class="range-inputs">
+                            <div class="range-item"><span data-i18n="from">Từ</span><input type="number" id="input-from"
+                                    class="num-input"></div>
+                            <div class="range-item"><span data-i18n="to">Đến</span><input type="number" id="input-to"
+                                    class="num-input"></div>
+                        </div>
+
+                        <div id="audio-setup-section" style="display: none;" class="audio-setup-container">
+                            <div class="audio-header">
+                                <span id="audio-label" data-i18n="audio_upload">🎵 Tải file Audio</span>
+                                <span id="audio-badge" class="badge-opt" data-i18n="badge">Tùy chọn</span>
+                            </div>
+                            <div id="audio-dropzone" class="audio-dropzone"
+                        <div id="audio-dropzone" class="audio-dropzone">
+                                <span class="file-status" data-i18n="audio_placeholder">Nhấn vào đây để tải file (.mp3,
+                                    .wav)</span>
+                                <input type="file" id="audio-file-input" hidden accept="audio/*"
+                                    onchange="updateFileName(this)">
+                            </div>
+                        </div>
+
+                        <div id="master-input-section" style="display: none;" class="master-input-box">
+                            <textarea id="modal-master-input" class="master-textarea"
+                                placeholder="Ví dụ: 1A 2B 3C..."></textarea>
+                        </div>
+
+                        <div id="dynamic-rows-container" class="input-list dynamic-scroll"></div>
+                    </div>
+
+                    <div class="modal-footer modal-actions" id="general-modal-footer">
+                    </div>
+                </div>
+            </div>
+
+            <div id="loadingModal" class="modal-overlay">
+                <div class="modal-box loading-box">
+                    <div class="spinner"></div>
+                    <div class="modal-message" style="border:none; margin-top:15px;" data-i18n="loading_processing">Đang xử lý dữ liệu...</div>
+                </div>
+            </div>
+
+            <div id="processing-overlay">
+                <div class="loader-modal">
+                    <div class="educational-loader"></div>
+                    <div class="log-window" id="log-container"></div>
+                    <p id="process-status" data-i18n="process">Đang chuẩn bị dữ liệu...</p>
+                </div>
+            </div>
+
+            <div id="step2IntroModal" class="modal-overlay">
+                <div class="modal-box intro-modal-box">
+                    <div class="intro-title" data-i18n="intro_title">💡 Hướng dẫn Bước 2</div>
+
+                    <div class="intro-content">
+                        <div class="intro-highlight" data-i18n="intro_desc">
+                            ✅ Bước này dùng để chia phần cho đề thi:
+                        </div>
+                        <ul>
+                            <li data-i18n="intro_li_listening">Đề có Đúng/Sai, Trả lời ngắn: Bấm '+' để khai báo.</li>
+                            <li data-i18n="intro_li_tf">Đề có Đúng/Sai, Trả lời ngắn: Bấm '+' để khai báo.</li>
+                            <li data-i18n="intro_li_abcd">Đề có trắc nghiệm ABCD: Bấm '+' để khai báo.</li>
+                        </ul>
+                    </div>
+
+                    <div class="modal-actions intro-actions">
+                        <button class="btn-done" onclick="closeStep2Intro(false)" data-i18n="done_intro">Đã
+                            hiểu</button>
+                        <button class="btn-never-show" onclick="closeStep2Intro(true)"
+                            data-i18n="turn_off_next_time">Không
+                            hiện lại lần sau</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="processing-overlay">
+                <div class="loader-modal">
+                    <div class="educational-loader"></div>
+
+                    <div class="log-window" id="log-container">
+                    </div>
+
+                    <p id="process-status" data-i18n="process">Đang chuẩn bị dữ liệu...</p>
+                </div>
+            </div>
         </div>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js"></script>
-    <script src="https://unpkg.com/jszip/dist/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://unpkg.com/docx-preview/dist/docx-preview.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://unpkg.com/@panzoom/panzoom@4.5.1/dist/panzoom.min.js"></script>
     <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <!-- Thêm crossorigin="anonymous" vào các thẻ script load từ Google -->
-    <script type="module" crossorigin="anonymous" src="https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js"></script>
-    <script type="module" crossorigin="anonymous" src="https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"></script>
+    <script type="module" crossorigin="anonymous"
+        src="https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js"></script>
+    <script type="module" crossorigin="anonymous"
+        src="https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js"></script>
 
     <script src="/static/js/storage/storage_manager.js"></script>
     <script src="/static/js/storage/session_manager.js"></script>
 
     <script src="/static/js/common/navigation.js"></script>
-    <script src="/static/js/common/modal_logic.js"></script>
+    <script src="/static/js/common/modal_ui.js?v=2"></script>
+    <script src="/static/js/common/modal_logic.js?v=2"></script>
     <script src="/static/js/common/packager.js"></script>
 
     <script src="/static/js/language/i18n.js"></script>
 
     <script src="/static/js/dashboard/package_engine.js"></script>
-    <script src="/static/js/dashboard/dashboard_manager.js"></script>
+    <script src="/static/js/dashboard/dashboard_ui.js"></script>
     <script src="/static/js/dashboard/dashboard_render.js"></script>
+    <script src="/static/js/dashboard/upload_handler.js"></script>
+    <script src="/static/js/dashboard/referral_manager.js"></script>
+    <script src="/static/js/dashboard/exam_wizard_logic.js"></script>
+    <script src="/static/js/dashboard/dashboard_manager.js"></script>
     <script src="/static/js/dashboard/dark_light.js"></script>
 
     <script src="/static/js/step1/step1_handler.js"></script>
     <script src="/static/js/step1/input_handler/input_classifier.js"></script>
     <script src="/static/js/step1/input_handler/pdf_processor.js"></script>
     <script src="/static/js/step1/input_handler/docx_processor.js"></script>
+    <script src="/static/js/step1/input_handler/image_processor.js"></script>
 
     <script src="/static/js/step2/audio_processor.js"></script>
     <script src="/static/js/step2/step2_card_render.js"></script>
@@ -330,7 +430,7 @@
     <script src="/static/js/effect/card.js"></script>
 
     <script src="/static/js/server/uploader.js"></script>
-    <script src="/static/js/server/guest_action_types.js"></script>
+    <script src="/static/js/server/action_types.js"></script>
     <script src="/static/js/server/sender.js"></script>
     <script src="/static/js/server/client_internal_actions.js"></script>
     <script src="/static/js/server/request_helper.js"></script>
@@ -338,44 +438,71 @@
     <script src="/static/js/server/main_controller.js"></script>
     <script src="/static/js/server/server_comm.js"></script>
 
-    <script type="module" src="/static/js/auth/auth.js"></script>
+    <script type="module" src="/static/js/auth/auth.js?v=9"></script>
+    <script src="/static/js/auth/identity_manager.js"></script>
 
     <script>
-// 1. Hàm kiểm tra server Hono đã sống chưa
-const checkServer = async () => {
-    try {
-        const res = await fetch('/api/stats'); // Gọi đến route bạn viết trong index.ts
-        if (res.ok) return true;
-    } catch (e) { return false; }
-};
+        // 0. Hàm điều phối hiển thị các trang chính
+        window.showPage = (pageId) => {
+            const mainPages = ['splash-screen', 'dashboard-page', 'create-steps-page'];
+            mainPages.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    if (id === pageId) {
+                        el.classList.add('active');
+                        el.style.display = ''; // Let CSS handle it (.active has display: grid)
+                        if (id !== 'splash-screen') el.style.opacity = "1";
+                        if (id === 'dashboard-page' && typeof DashboardManager !== 'undefined') {
+                            DashboardManager.init();
+                            DashboardManager.checkFinalStatus();
+                        }
+                    } else {
+                        el.classList.remove('active');
+                        el.style.display = 'none';
+                    }
+                }
+            });
+        };
 
-const statuses = document.querySelectorAll('.status-item');
-let currentStatus = 0;
+        // 1. Hàm kiểm tra server Hono đã sống chưa
+        const checkServer = async () => {
+            try {
+                const apiBase = (window.location.hostname === 'zestest.com' || window.location.hostname === 'localhost') ? '' : 'https://zestest.com';
+                const res = await fetch(`${apiBase}/api/stats`); 
+                if (res.ok) return true;
+            } catch (e) { return false; }
+        };
 
-const changeStatus = async () => {
-    if (currentStatus < statuses.length - 1) {
-        statuses[currentStatus].classList.remove('active');
-        currentStatus++;
-        statuses[currentStatus].classList.add('active');
-    } else {
-        // ĐỢI SERVER PHẢN HỒI THẬT THÌ MỚI VÀO DASHBOARD
-        const isServerUp = await checkServer();
-        if (isServerUp) {
-            clearInterval(statusInterval);
-            const splash = document.getElementById('splash-screen');
-            splash.style.opacity = "0";
-            setTimeout(() => {
-                showPage('dashboard-page');
-                splash.style.display = 'none';
-            }, 400);
-        } else {
-            // Nếu server chưa phản hồi, giữ nguyên ở dòng "Đang kết nối..."
-            console.log("Đang đợi Hono API...");
-        }
-    }
-};
+        const statuses = document.querySelectorAll('.status-item');
+        let currentStatus = 0;
 
-const statusInterval = setInterval(changeStatus, 800);
-</script>
+        const changeStatus = async () => {
+            if (currentStatus < statuses.length - 1) {
+                if (statuses[currentStatus]) statuses[currentStatus].classList.remove('active');
+                currentStatus++;
+                if (statuses[currentStatus]) statuses[currentStatus].classList.add('active');
+            } else {
+                // ĐỢI SERVER PHẢN HỒI THẬT THÌ MỚI VÀO DASHBOARD
+                const isServerUp = await checkServer();
+                if (isServerUp) {
+                    clearInterval(statusInterval);
+                    const splash = document.getElementById('splash-screen');
+                    if (!splash) return; // Tránh lỗi khi trang login/logout thay đổi DOM
+
+                    splash.style.opacity = "0";
+                    setTimeout(() => {
+                        showPage('dashboard-page');
+                        splash.style.display = 'none';
+                    }, 400);
+                } else {
+                    // Nếu server chưa phản hồi, giữ nguyên ở dòng "Đang kết nối..."
+                    console.log("Đang đợi Hono API...");
+                }
+            }
+        };
+
+        const statusInterval = setInterval(changeStatus, 800);
+    </script>
 </body>
+
 </html>

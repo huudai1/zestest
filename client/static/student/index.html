@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Zestest Student</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.3/dist/photoswipe.css">
+    <link rel="stylesheet" href="/static/css/splash.css">
+    <link rel="stylesheet" href="dashboard-style.css">
+    <link rel="stylesheet" href="stu_quizz.css">
+    <link rel="stylesheet" href="summary.css">
+    <link rel="stylesheet" href="detail.css">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <style>
+        :root {
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --primary: #1ed760;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+        }
+
+        .lang-dropdown-content { display: none; }
+        .lang-dropdown-content.show { display: block; }
+        .lang-item:hover { background: rgba(255,255,255,0.05); }
+
+        /* RESET & BASE */
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            height: 100dvh;
+            overflow: hidden;
+            position: fixed;
+            width: 100vw;
+        }
+
+        .page {
+            display: none;
+            width: 100%;
+            height: 100%;
+            flex-direction: column;
+        }
+
+        /* ================= PAGE 0: LOBBY DASHBOARD ================= */
+        #page-lobby {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background-color: var(--bg-main);
+        }
+
+        .dashboard-container {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-header {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .user-badge {
+            flex: 1;
+            background: var(--bg-card);
+            border: 1px solid #334155;
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            text-align: center;
+            color: var(--text-dim);
+        }
+
+        .banner-box {
+            background: linear-gradient(135deg, #1e3a8a, var(--primary));
+            border-radius: 16px;
+            min-height: 100px;
+            padding: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .stu-input-box {
+            background: var(--bg-card);
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            border: 1px solid var(--primary);
+        }
+
+        .stu-input-box input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            outline: none;
+            text-align: center;
+        }
+
+        .exam-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 18px;
+            border: 1px solid #334155;
+        }
+
+        .btn-start {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        /* ================= PAGE 1: QUIZ (MOBILE & PC) ================= */
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: #181818;
+            overflow-x: hidden;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        }
+
+        .page {
+            background-color: #0c0c0c;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .webp-placeholder,
+        .webp-container {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .webp-placeholder img,
+        .webp-container img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .fixed-header {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            gap: 6px;
+            background: #121212;
+            border-bottom: 1px solid #222;
+            overflow: hidden;
+        }
+
+        /* Audio player panel — swap với action-group */
+        #audio-panel {
+            flex: 1;
+            display: none;
+            align-items: center;
+            gap: 6px;
+            padding: 0 6px;
+            min-width: 0;
+            background: #b36b00;
+            border-radius: 8px;
+            height: 36px;
+        }
+
+        #audio-panel.active {
+            display: flex;
+        }
+
+        #audio-panel-icon {
+            font-size: 14px;
+            flex-shrink: 0;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        #audio-seek {
+            flex: 1;
+            min-width: 0;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.3);
+            outline: none;
+            cursor: pointer;
+        }
+
+        #audio-seek::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #fff;
+            cursor: pointer;
+            box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
+        }
+
+        #audio-time {
+            font-size: 10px;
+            font-variant-numeric: tabular-nums;
+            color: rgba(255, 255, 255, 0.9);
+            flex-shrink: 0;
+        }
+
+        #audio-close {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+            cursor: pointer;
+            flex-shrink: 0;
+            padding: 0 2px;
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .fixed-footer {
+            height: 65px;
+            background: rgba(18, 18, 18, 0.85);
+            backdrop-filter: blur(10px);
+        }
+
+        /* PC ADAPTIVE LAYOUT */
+        @media (min-width: 768px) {
+            #page-quiz .app-container {
+                width: 100% !important;
+                max-width: 1600px !important;
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
+            /* Summary dãn rộng hơn trên PC */
+            #page-summary .app-container {
+                width: 100% !important;
+                max-width: 1200px !important;
+                flex-direction: column !important;
+                padding: 40px;
+                height: 100vh;
+                overflow-y: auto;
+            }
+
+            /* Detail dãn cực rộng trên PC để xem ảnh sướng hơn */
+            #page-detail .app-container {
+                width: 100% !important;
+                max-width: 1600px !important;
+                flex-direction: column !important;
+                padding: 20px;
+                height: 100vh;
+                overflow-y: auto;
+            }
+
+            .fixed-header {
+                flex: 0 0 100%;
+            }
+
+            .main-content {
+                flex: 1;
+                height: calc(100% - 50px);
+                border-right: 1px solid #222;
+                overflow-y: auto;
+            }
+
+            .fixed-footer {
+                flex: 0 0 380px;
+                height: calc(100% - 50px);
+                border-top: none;
+                border-left: 1px solid #333;
+                padding: 10px;
+                display: block;
+                overflow-y: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Splash Screen -->
+    <div id="splash-screen" class="active">
+        <div class="loading-wrapper">
+            <div class="brand-context">
+                <p class="welcome-msg" data-i18n="stu_splash_welcome">Chào mừng bạn đến với</p>
+                <h1 class="teacher-name">Zestest</h1>
+            </div>
+            <div class="impressive-loader">
+                <div class="cube-wrapper">
+                    <div class="cube cube-1"></div>
+                    <div class="cube cube-2"></div>
+                    <div class="cube cube-3"></div>
+                </div>
+                <div class="status-texts" id="splash-status">
+                    <p class="status-item active" data-i18n="stu_splash_setup">Đang thiết lập môi trường...</p>
+                </div>
+            </div>
+            <div class="powered-by">Powered by <span>Zestest</span></div>
+        </div>
+    </div>
+
+    <!-- Màn hình nhập tên (Lobby) -->
+    <div id="page-lobby" class="page">
+        <div class="dashboard-container">
+            <div class="user-header">
+                <div class="user-badge">Zestest Student</div>
+                <div class="user-badge" id="display-date">--/--/2026</div>
+                <!-- Language switcher -->
+                <div class="lang-dropdown" style="position:relative;">
+                    <button class="lang-dropbtn" onclick="toggleLangMenu()"
+                        style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#94a3b8;padding:6px 10px;border-radius:10px;cursor:pointer;font-size:12px;display:flex;align-items:center;gap:4px;">
+                        <span id="current-lang-flag">🇻🇳</span>
+                        <span id="current-lang-code">VI</span>
+                    </button>
+                    <div id="lang-content" class="lang-dropdown-content" 
+                        style="position:absolute; top:100%; right:0; background:#1e293b; border:1px solid #334155; border-radius:12px; margin-top:8px; width:120px; z-index:1000; box-shadow:0 10px 30px rgba(0,0,0,0.4); overflow:hidden;">
+                        <div class="lang-item" onclick="I18n.setLocale('vi')" 
+                            style="padding:8px 14px;cursor:pointer;font-size:13px;display:flex;gap:8px;align-items:center;border-bottom:1px solid rgba(255,255,255,0.05);">
+                            <span>🇻🇳</span> Tiếng Việt
+                        </div>
+                        <div class="lang-item" onclick="I18n.setLocale('en')" 
+                            style="padding:8px 14px;cursor:pointer;font-size:13px;display:flex;gap:8px;align-items:center;">
+                            <span>🇺🇸</span> English
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="banner-box" data-i18n="stu_lobby_banner">Chào mừng bạn! Vui lòng nhập tên để vào thi.</div>
+            <div class="stu-input-box">
+                <input type="text" id="inputName" data-i18n-placeholder="stu_name_placeholder" placeholder="Nhập Họ Tên của bạn..." autocomplete="off">
+            </div>
+            <div class="exam-card">
+                <h2 id="lobby-exam-name" style="margin-top:0" data-i18n="stu_exam_loading">Đang tải tên đề...</h2>
+                <p id="lobby-pkg" style="font-size:12px; color:var(--text-dim)"></p>
+                
+                <div id="room-closed-notice" style="display: none; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); padding: 15px; border-radius: 12px; margin-bottom: 15px; color: #f87171; font-size: 13px; text-align: center; line-height: 1.5;">
+                    <b data-i18n="stu_room_closed_title">🛑 PHÒNG THI ĐÃ ĐÓNG</b><br>
+                    <span data-i18n="stu_room_closed_desc">Giáo viên đã kết thúc phiên thi này. Bạn không thể nộp bài được nữa.</span>
+                </div>
+
+                <button class="btn-start" id="btnStart" data-i18n="stu_btn_continue">TIẾP TỤC</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tutorial Modal -->
+    <div id="tutorialModal" class="modal-overlay">
+        <div class="tutorial-box">
+            <h2 class="tutorial-title" data-i18n="stu_tutorial_title">Hướng dẫn nhanh</h2>
+            <div class="tutorial-list">
+                <div class="tutorial-item">
+                    <span class="tutorial-icon">↔️</span>
+                    <span data-i18n="stu_tutorial_swipe">Vuốt ngang để chuyển câu hỏi nhanh chóng.</span>
+                </div>
+                <div class="tutorial-item">
+                    <span class="tutorial-icon">⚡</span>
+                    <span data-i18n="stu_tutorial_tap">Chạm vào viền trái/phải để lật trang nhanh.</span>
+                </div>
+                <div class="tutorial-item">
+                    <span class="tutorial-icon">📁</span>
+                    <span data-i18n="stu_tutorial_folder">Bấm biểu tượng thư mục để xem toàn bộ danh sách.</span>
+                </div>
+                <div class="tutorial-item">
+                    <span class="tutorial-icon">⏰</span>
+                    <span data-i18n="stu_tutorial_timer">Hệ thống tự động nộp bài khi hết thời gian.</span>
+                </div>
+            </div>
+            <p id="unpack-status-text" class="unpack-status" data-i18n="stu_unpack_loading">(Đang chuẩn bị dữ liệu thi...)</p>
+            <button id="btnUnderstand" class="btn-understand-premium" style="display:none;" data-i18n="stu_btn_understood">TÔI ĐÃ HIỂU</button>
+        </div>
+    </div>
+
+    <!-- Countdown Modal -->
+    <div id="countdownModal" class="modal-overlay">
+        <div class="countdown-container">
+            <h1 style="color:var(--primary); font-size:28px; margin-bottom:0;" data-i18n="stu_countdown_ready">Sẵn sàng chưa?</h1>
+            <p style="color:#94a3b8; margin-bottom:20px;" data-i18n="stu_countdown_wish">Chúc bạn thi thật tốt!</p>
+            <div id="countdown-text">5</div>
+        </div>
+    </div>
+
+    <div id="page-quiz" class="page">
+        <div class="app-container">
+            <header class="fixed-header">
+                <div class="mini-dashboard">
+                    <div class="dash-row time">
+                        <div class="dash-bar" id="bar-time"></div>
+                        <span id="timer-text">00:00</span>
+                    </div>
+                    <div class="dash-row progress">
+                        <div class="dash-bar" id="bar-progress"></div>
+                        <span id="progress-text">0/--</span>
+                    </div>
+                </div>
+                <div class="current-q-box">
+                    <span class="q-label">Q</span>
+                    <span id="current-q-view">1</span>
+                </div>
+                <!-- Warning Count -->
+                <div class="current-q-box" style="border-color: rgba(255, 68, 68, 0.5); color: #ff4444; min-width: 45px;">
+                    <span class="q-label" style="color: rgba(255, 68, 68, 0.7);">Warn</span>
+                    <span id="warn-count">0</span>
+                </div>
+                <!-- Audio Panel: hiện khi phát audio, ẩn action-group -->
+                <div id="audio-panel">
+                    <span id="audio-panel-icon" onclick="AudioController.toggle()">&#9616;&#9616;</span>
+                    <input id="audio-seek" type="range" min="0" max="100" value="0"
+                        oninput="AudioController.seek(this.value)">
+                    <span id="audio-time">0:00</span>
+                    <button id="audio-close" onclick="AudioController.collapse()">✕</button>
+                </div>
+                <div class="action-group" id="header-action-group">
+                    <button class="btn-icon orange" id="audio-btn" style="display:none;"
+                        onclick="AudioController.toggle()">▶</button>
+
+                    <!-- Nút Nghi vấn mới -->
+                    <button class="btn-icon yellow" id="btn-flag" onclick="StuManager.toggleFlag()">🚩</button>
+
+                    <button class="btn-icon" id="btn-modal" onclick="StuManager.openModal()">📁</button>
+                    <button class="btn-main green" id="btn-submit"
+                        onclick="SubmitHandler.handleSubmission()" data-i18n="stu_btn_submit">Nộp</button>
+                </div>
+            </header>
+            <main class="main-content">
+                <div class="webp-container">
+                    <p>Đang hiển thị đề thi...</p>
+                </div>
+            </main>
+            <footer class="fixed-footer">
+                <!-- Swiper Container -->
+                <div class="swiper answer-swiper">
+                    <!-- Swiper Wrapper (Nơi Swiper tính toán cuộn ngang) -->
+                    <div class="swiper-wrapper" id="main-wrapper">
+                        <!-- Các slide sẽ được JS inject vào đây -->
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <div id="page-summary" class="page">
+        <div class="app-container">
+            <div class="header-stats">
+                <div class="stat-badge" id="summary-total">Total: 0</div>
+                <div class="stat-badge" id="summary-correct">Correct: 0</div>
+                <div class="stat-badge" id="summary-warn">Warn: 0</div>
+            </div>
+
+            <div class="score-card">
+                <h1 id="summary-score">0.0</h1>
+            </div>
+
+            <p class="section-label" data-i18n="stu_summary_stats">Thống kê chi tiết</p>
+            <div class="chart-placeholder">
+                <span data-i18n="stu_summary_chart_wip">[Biểu đồ đang phát triển]</span>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-gray" onclick="location.reload()" data-i18n="stu_btn_redo">Làm lại</button>
+                <button class="btn btn-green" onclick="SummaryManager.viewDetails()" data-i18n="stu_btn_detail">Xem chi tiết</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="page-detail" class="page">
+        <div class="app-container">
+            <div class="toolbar">
+                <button class="tool-btn btn-gray" onclick="showPage('page-summary')" data-i18n="stu_detail_back">Quay lại</button>
+                <button class="tool-btn btn-lime" onclick="DetailManager.openModal()" data-i18n="stu_detail_list">Danh sách tổng quát</button>
+                <button class="tool-btn btn-red" onclick="location.reload()" data-i18n="stu_detail_exit">Thoát</button>
+            </div>
+
+            <div class="viewer-window">
+                <div class="webp-placeholder" id="detail-webp-container">
+                    <p data-i18n="stu_detail_loading">Đang tải hình ảnh...</p>
+                </div>
+            </div>
+
+            <div class="interaction-panel">
+                <div class="question-info" id="detail-q-info">Q: 1</div>
+
+                <div id="detail-choice-section" class="answer-section">
+                    <div class="answer-row">
+                        <span class="row-label" data-i18n="stu_detail_your_ans">Bạn chọn:</span>
+                        <div class="option-group" id="detail-stu-options">
+                            <div class="opt-box" data-opt="A">A</div>
+                            <div class="opt-box" data-opt="B">B</div>
+                            <div class="opt-box" data-opt="C">C</div>
+                            <div class="opt-box" data-opt="D">D</div>
+                        </div>
+                    </div>
+                    <div class="answer-row">
+                        <span class="row-label" data-i18n="stu_detail_correct_ans">Đáp án:</span>
+                        <div class="option-group" id="detail-final-options">
+                            <div class="opt-box" data-opt="A">A</div>
+                            <div class="opt-box" data-opt="B">B</div>
+                            <div class="opt-box" data-opt="C">C</div>
+                            <div class="opt-box" data-opt="D">D</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="detail-tf-section" class="tf-section" style="display: none;">
+                    <div class="tf-box wrong" id="detail-tf-stu">BẠN: TRUE</div>
+                    <div class="tf-box correct" id="detail-tf-final">ĐÁP ÁN: FALSE</div>
+                </div>
+
+                <div id="detail-essay-section" class="essay-section" style="display: none;">
+                    <p class="essay-label" data-i18n="stu_detail_essay_label">Đáp án chi tiết:</p>
+                    <div class="essay-content" id="detail-essay-content">
+                        Nội dung lời giải chi tiết cho câu hỏi tự luận sẽ hiện ở đây...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Security Violation Modal -->
+    <div id="securityModal" class="modal-overlay" style="z-index: 10001;">
+        <div class="modal-content" style="max-width: 400px; text-align: center; border: 1px solid #ff4444;">
+            <div class="modal-header" style="background: #ff4444; color: white;">
+                <span data-i18n="stu_security_title">CẢNH BÁO VI PHẠM</span>
+            </div>
+            <div class="modal-body">
+                <p id="security-msg" style="margin: 20px 0; color: #ff4444; font-weight: bold;" data-i18n="stu_security_msg">Bạn vừa rời khỏi phòng thi!</p>
+                <p style="font-size: 13px; color: #94a3b8;" data-i18n="stu_security_sub">Hành động này đã được ghi lại. Vui lòng quay lại toàn màn hình để tiếp tục.</p>
+            </div>
+            <div class="modal-footer" style="justify-content: center;">
+                <button class="btn-main red" onclick="SecurityManager.closeViolationModal()" data-i18n="stu_security_btn">TÔI ĐÃ HIỂU &amp; QUAY LẠI</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Submit Confirmation Modal -->
+    <div id="submitConfirmModal" class="modal-overlay" style="z-index: 10000;">
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+            <div class="modal-header">
+                <span data-i18n="stu_submit_title">XÁC NHẬN NỘP BÀI</span>
+            </div>
+            <div class="modal-body">
+                <p style="margin: 20px 0;" data-i18n="stu_submit_confirm">Bạn có chắc chắn muốn nộp bài và kết thúc kỳ thi không?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-gray" onclick="SubmitHandler.closeConfirm()" data-i18n="stu_submit_cancel">HỦY</button>
+                <button class="btn btn-green" onclick="SubmitHandler.confirmSubmission()" data-i18n="stu_submit_ok">NỘP BÀI</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cấu trúc Modal chuẩn (Grid Danh sách câu hỏi) -->
+    <div id="gridModal" class="modal-overlay" onclick="if(event.target === this) StuManager.closeModal()">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span data-i18n="stu_grid_title">DANH SÁCH CÂU HỎI</span>
+                <button class="close-modal" onclick="StuManager.closeModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="question-grid" id="questionGrid">
+                    <!-- JS sẽ đổ grid-item vào đây -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="legend">
+                    <div class="leg-item"><span class="dot done"></span> <span data-i18n="stu_legend_done">Đã làm</span></div>
+                    <div class="leg-item"><span class="dot flagging"></span> <span data-i18n="stu_legend_flag">Nghi vấn</span></div>
+                    <div class="leg-item"><span class="dot pending"></span> <span data-i18n="stu_legend_pending">Chưa làm</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/photoswipe@5.4.3/dist/umd/photoswipe.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/photoswipe@5.4.3/dist/umd/photoswipe-lightbox.umd.min.js"></script>
+
+    <script src="/static/js/language/i18n.js"></script>
+    <script src="/static/js/storage/storage_manager.js"></script>
+    <script src="/static/js/storage/session_manager.js"></script>
+    <script src="/static/student/ZestUnpackager.js"></script>
+    <script src="/static/student/render_manager.js"></script>
+    <script src="/static/student/stu_manager.js"></script>
+    <script src="/static/student/quiz_controller.js?v=2"></script>
+    <script src="/static/student/InitData.js"></script>
+    <script src="/static/student/submit_handler.js?v=2"></script>
+    <script src="/static/student/summary_manager.js"></script>
+    <script src="/static/student/detail_manager.js"></script>
+    <script src="/static/student/security_student.js"></script>
+    
+    <script>
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+            const target = document.getElementById(pageId);
+            if (target) target.style.display = 'flex';
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const params = new URLSearchParams(window.location.search);
+            const examId = params.get('exam');
+
+            document.getElementById('display-date').innerText = new Date().toLocaleDateString('vi-VN');
+
+            // Tự động điền tên cũ nếu có
+            const savedName = localStorage.getItem('zest_stu_name');
+            if (savedName) document.getElementById('inputName').value = savedName;
+
+            // 1. Tắt splash screen ngay sau khi JS load xong
+            setTimeout(() => {
+                const splash = document.getElementById('splash-screen');
+                if (splash) {
+                    splash.style.opacity = '0';
+                    setTimeout(() => splash.style.display = 'none', 500);
+                }
+                showPage('page-lobby');
+            }, 1000);
+
+            // 2. Fetch thông tin đề thi
+            let examDataUrl = null;
+            let ownerTier = 'GUEST'; 
+            if (examId) {
+                try {
+                    const apiBase = (window.location.hostname === 'zestest.com' || window.location.hostname === 'localhost') ? '' : 'https://zestest.com';
+                    const res = await fetch(`${apiBase}/api/public/exam/${examId}`);
+                    const data = await res.json();
+                    if (data.success && data.exam) {
+                        document.getElementById('lobby-exam-name').innerText = data.exam.name;
+                        examDataUrl = data.exam.url;
+                        ownerTier = data.exam.owner_tier || 'GUEST';
+                        window.maxAttemptsAllowed = data.exam.max_attempts || 1;
+                        if (!localStorage.getItem(`zest_attempts_${examId}`)) {
+                            localStorage.setItem(`zest_attempts_${examId}`, 1);
+                        }
+
+                        // Kiểm tra trạng thái phòng thi
+                        if (data.exam.status === 'CLOSED') {
+                            const notice = document.getElementById('room-closed-notice');
+                            if (notice) notice.style.display = 'block';
+                            const btnStart = document.getElementById('btnStart');
+                            if (btnStart) {
+                                btnStart.disabled = true;
+                                btnStart.style.opacity = '0.5';
+                                btnStart.innerText = 'PHÒNG ĐÃ ĐÓNG';
+                            }
+                        }
+                    } else {
+                        document.getElementById('lobby-exam-name').innerText = "Đề thi không tồn tại!";
+                    }
+                } catch (e) { console.warn(e); }
+            }
+
+            // Flag để biết khi nào Unpack xong
+            let isUnpackDone = false;
+            let unpackedData = null;
+
+            // Hàm tải và unpack chạy ngầm NGAY LÚC NÀY
+            const startBackgroundUnpack = async () => {
+                if (!examDataUrl) return;
+                try {
+                    await StorageManager.loadMeta(); // Đảm bảo đã load dữ liệu cũ từ IDB trước khi unpack
+                    console.log("📥 Bắt đầu tải và giải nén ZIP ngầm...");
+                    const zipRes = await fetch(examDataUrl);
+                    const zipBlob = await zipRes.blob();
+                    unpackedData = await ZestUnpackager.unpack(zipBlob);
+
+                    // LƯU VÀO INDEXED DB (StorageManager)
+                    console.log("💾 Đang lưu dữ liệu vào IndexedDB...");
+
+                        // 1. Lưu Meta
+                        if (unpackedData.meta) {
+                            const oldMeta = (StorageManager.examData && StorageManager.examData.examId === examId) 
+                                               ? StorageManager.examData : null;
+                            
+                            StorageManager.examData = unpackedData.meta;
+                            StorageManager.examData.examId = examId; // Gắn ID để nhận diện cho lần sau
+                            StorageManager.examData.isSubmitted = oldMeta ? !!oldMeta.isSubmitted : false;
+
+                            // Khôi phục bài làm cũ nếu đúng ID đề
+                            if (oldMeta && oldMeta.stu_answer && oldMeta.stu_answer.length > 0) {
+                                console.log("♻️ Đã khôi phục bài làm cũ từ local storage.");
+                                StorageManager.examData.stu_answer = oldMeta.stu_answer;
+
+                                // NẾU ĐÃ NỘP: Hiển thị thông báo ở Lobby
+                                if (StorageManager.examData.isSubmitted) {
+                                    const notice = document.getElementById('room-closed-notice');
+                                    if (notice) {
+                                        notice.style.display = 'block';
+                                        notice.style.background = 'rgba(59, 130, 246, 0.1)';
+                                        notice.style.borderColor = 'rgba(59, 130, 246, 0.2)';
+                                        notice.style.color = '#60a5fa';
+                                        const t = typeof I18n !== 'undefined' ? (k) => I18n.t(k) : (k) => k;
+                                        notice.innerHTML = `<b>ℹ️ ${t('lobby_submitted_title')}</b><br>${t('lobby_submitted_desc')}`;
+                                    }
+                                    const btnStart = document.getElementById('btnStart');
+                                    if (btnStart) {
+                                        btnStart.innerText = typeof I18n !== 'undefined' ? I18n.t('lobby_btn_review') : 'XEM LẠI KẺT QUẢ';
+                                        btnStart.style.background = '#8b5cf6'; // Màu tím cho khác biệt
+                                        
+                                        // Thêm nút làm lại
+                                        if (!document.getElementById('btnReset')) {
+                                            const btnReset = document.createElement('button');
+                                            btnReset.id = 'btnReset';
+                                            btnReset.className = 'btn-start';
+                                            btnReset.style.marginTop = '10px';
+                                            
+                                            // KIỂM TRA GIỚI HẠN LÀM BÀI
+                                            const localAttempts = parseInt(localStorage.getItem(`zest_attempts_${examId}`)) || 1;
+                                            const maxAllowed = window.maxAttemptsAllowed || 1;
+
+                                            if (localAttempts >= maxAllowed) {
+                                                btnReset.disabled = true;
+                                                btnReset.style.opacity = '0.3';
+                                                btnReset.style.cursor = 'not-allowed';
+                                                const tKey = typeof I18n !== 'undefined' ? (k) => I18n.t(k) : (k) => k;
+                                                btnReset.innerText = `${tKey('lobby_btn_no_attempt')} (${tKey('lobby_attempt_max')} ${maxAllowed} ${tKey('lobby_attempt_times')})`;
+                                            } else {
+                                                const tKey2 = typeof I18n !== 'undefined' ? (k) => I18n.t(k) : (k) => k;
+                                                btnReset.style.background = 'rgba(255,255,255,0.05)';
+                                                btnReset.style.color = '#94a3b8';
+                                                btnReset.style.border = '1px solid rgba(255,255,255,0.1)';
+                                                btnReset.innerText = `${tKey2('lobby_btn_redo_count')} (${localAttempts}/${maxAllowed} ${tKey2('lobby_attempt_times')})`;
+                                                btnReset.onclick = async () => {
+                                                    const tConfirm = typeof I18n !== 'undefined' ? I18n.t('lobby_confirm_redo') : 'Bạn có chắc muốn làm lại?';
+                                                    if (confirm(tConfirm)) {
+                                                        localStorage.setItem(`zest_attempts_${examId}`, localAttempts + 1);
+                                                        await StorageManager.resetStudentAnswers();
+                                                        StorageManager.examData.isSubmitted = false;
+                                                        await StorageManager.saveMeta();
+                                                        location.reload();
+                                                    }
+                                                };
+                                            }
+                                            btnStart.parentNode.appendChild(btnReset);
+                                        }
+                                    }
+                                }
+                            }
+
+                            // Khởi tạo mảng bài làm rỗng nếu chưa có (lần đầu tiên)
+                            if (!StorageManager.examData.stu_answer || StorageManager.examData.stu_answer.length === 0) {
+                                await StorageManager.resetStudentAnswers();
+                            } else {
+                                await StorageManager.saveMeta();
+                            }
+                        }
+
+                    // 2. Lưu Audio
+                    if (unpackedData.audioBlob) {
+                        await StorageManager.saveAudio(unpackedData.audioBlob);
+                    }
+
+                    // 3. Lưu Ảnh WebP
+                    if (unpackedData.imageBlobs && unpackedData.imageBlobs.length > 0) {
+                        await StorageManager.saveWebP(unpackedData.imageBlobs);
+                    }
+
+                    isUnpackDone = true;
+                    console.log("✅ Giải nén và lưu trữ ngầm hoàn tất!");
+
+                    // Nếu người dùng đang chờ ở Tutorial
+                    const btnUnderstand = document.getElementById('btnUnderstand');
+                    const unpackStatus = document.getElementById('unpack-status-text');
+                    if (btnUnderstand && btnUnderstand.style.display === 'none') {
+                        unpackStatus.style.display = 'none';
+                        btnUnderstand.style.display = 'inline-block';
+                    }
+                } catch (e) {
+                    console.error("Lỗi unpack:", e);
+                    document.getElementById('unpack-status-text').innerText = "Lỗi tải đề. Vui lòng F5 lại trang!";
+                    document.getElementById('unpack-status-text').style.color = "red";
+                }
+            };
+
+            // Gọi hàm unpack ngay không cần await
+            startBackgroundUnpack();
+
+            // 3. Xử lý nút Tiếp tục (Ghi danh & Hiện Hướng dẫn)
+            document.getElementById('btnStart').onclick = async () => {
+                // NẾU ĐÃ NỘP BÀI: Nhảy thẳng vào xem kết quả
+                if (StorageManager.examData && StorageManager.examData.isSubmitted) {
+                    if (typeof SubmitHandler !== 'undefined') {
+                        const results = SubmitHandler.calculate();
+                        sessionStorage.setItem("zestest_result", JSON.stringify(results));
+                        if (window.SummaryManager) window.SummaryManager.render();
+                        showPage('page-summary');
+                    }
+                    return;
+                }
+
+                const name = document.getElementById('inputName').value.trim();
+                if (!name) return alert("Vui lòng nhập họ tên của bạn!");
+
+                sessionStorage.setItem('stu_name', name);
+                localStorage.setItem('zest_stu_name', name);
+
+                window.studentId = localStorage.getItem('zest_stu_id') || 'stu_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('zest_stu_id', window.studentId);
+                sessionStorage.setItem('stu_id', window.studentId);
+
+                // Kết nối WebSocket báo cáo Giáo viên
+                if (examId) {
+                    // KẾT NỐI WEBSOCKET BÁO CÁO GIÁO VIÊN (Mở rộng cho GUEST để test MIE)
+                    const allowedTiers = ['GUEST', 'USER_FREE', 'PREMIUM_1', 'PREMIUM_2', 'PREMIUM_3', 'GIFT_PRO', 'ADMIN'];
+                    if (allowedTiers.includes(ownerTier)) {
+                        const wsUrl = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+                        const wsHost = (window.location.hostname === 'zestest.com' || window.location.hostname === 'localhost') ? window.location.host : 'zestest.com';
+                        window.examWs = new WebSocket(`${wsUrl}//${wsHost}/api/room/${examId}`);
+                        
+                        window.examWs.onopen = () => {
+                            console.log("🟢 [Student WS] Đã kết nối phòng thi!");
+                            window.examWs.send(JSON.stringify({
+                                type: 'STUDENT_JOIN',
+                                student: { id: window.studentId, name: name, progress: "0%" }
+                            }));
+                        };
+
+                        window.examWs.onmessage = (event) => {
+                            try {
+                                const data = JSON.parse(event.data);
+                                if (data.type === 'YOU_ARE_KICKED') {
+                                    // 1. Hiện Splash báo bị Kick
+                                    const splash = document.getElementById('splash-screen');
+                                    if (splash) {
+                                        splash.style.display = 'flex';
+                                        splash.style.opacity = '1';
+                                        splash.style.zIndex = '999999';
+                                        const status = document.getElementById('splash-status');
+                                        if (status) status.innerHTML = '<p class="status-item active" style="color: #ef4444; font-size: 20px; font-weight: 900; text-align: center;">🛑 BẠN ĐÃ BỊ GIÁO VIÊN MỜI RA KHỎI PHÒNG THI</p>';
+                                    }
+                                    // 2. Ngắt kết nối và dừng mọi hoạt động
+                                    if (window.examWs) window.examWs.close();
+                                    document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+                                    // 3. Xóa dữ liệu phiên để không tự reconnect (nếu có logic đó)
+                                    sessionStorage.clear();
+                                }
+                            } catch (e) {}
+                        };
+                    } else {
+                        console.log("ℹ️ [Student WS] Chế độ giám sát Realtime bị tắt (Giáo viên Free)");
+                    }
+                }
+
+                // Hiện Modal hướng dẫn và chờ Unpack
+                document.getElementById('tutorialModal').style.display = 'flex';
+
+                // Cập nhật trạng thái nút Tôi Đã Hiểu
+                if (isUnpackDone) {
+                    document.getElementById('unpack-status-text').style.display = 'none';
+                    document.getElementById('btnUnderstand').style.display = 'inline-block';
+                }
+            };
+
+            // 4. Xử lý nút TÔI ĐÃ HIỂU -> Đếm ngược -> Vô thi
+            document.getElementById('btnUnderstand').onclick = async () => {
+                document.getElementById('tutorialModal').style.display = 'none';
+                
+                // Kích hoạt bảo mật (Fullscreen & Monitor)
+                if (window.SecurityManager) {
+                    await SecurityManager.requestFullscreen();
+                    SecurityManager.activate();
+                }
+                
+                const countModal = document.getElementById('countdownModal');
+                const countText = document.getElementById('countdown-text');
+                countModal.style.display = 'flex';
+
+                for (let i = 5; i > 0; i--) {
+                    countText.innerText = i;
+                    await new Promise(r => setTimeout(r, 1000));
+                }
+                countText.innerText = "BẮT ĐẦU!";
+                await new Promise(r => setTimeout(r, 500));
+                countModal.style.display = 'none';
+
+                // Bắt đầu vào giao diện thi
+                showPage('page-quiz');
+
+                try {
+                    // Mọi dữ liệu đã nằm an toàn trong StorageManager nhờ Background Loader
+                    // Chỉ cần init QuizController và RenderManager!
+                    await QuizController.init();
+                    await RenderManager.initView(false);
+                } catch (err) {
+                    console.warn("Lỗi tải UI đề:", err);
+                    alert("Có lỗi hiển thị đề thi, vui lòng thử lại!");
+                }
+            };
+        });
+    </script>
+
+    <script>
+        // Cập nhật UI học sinh khi đổi ngôn ngữ (không cần reload)
+        window.addEventListener('languageChanged', () => {
+            // 1. Dịch lại tất cả [data-i18n] tĩnh
+            if (typeof I18n !== 'undefined') I18n.apply();
+
+            // 2. Đồng bộ flag/code trên nút switcher học sinh
+            const flags = { vi: '🇻🇳', en: '🇺🇸' };
+            const codes = { vi: 'VI', en: 'EN' };
+            const lang = typeof I18n !== 'undefined' ? I18n.locale : 'vi';
+            const flagEl = document.getElementById('current-lang-flag');
+            const codeEl = document.getElementById('current-lang-code');
+            if (flagEl) flagEl.innerText = flags[lang] || '🇻🇳';
+            if (codeEl) codeEl.innerText = codes[lang] || 'VI';
+
+            // 3. Refresh lobby notice nếu đang hiển thị
+            const notice = document.getElementById('room-closed-notice');
+            if (notice && notice.style.display !== 'none' && typeof I18n !== 'undefined') {
+                const t = (k) => I18n.t(k);
+                const isSubmitted = notice.style.color === 'rgb(96, 165, 250)'; // màu xanh = đã nộp
+                if (isSubmitted) {
+                    notice.innerHTML = `<b>ℹ️ ${t('lobby_submitted_title')}</b><br>${t('lobby_submitted_desc')}`;
+                }
+            }
+
+            // 4. Cập nhật nút Xem lại / Làm lại
+            const btnStart = document.getElementById('btnStart');
+            if (btnStart && btnStart.style.background === 'rgb(139, 92, 246)') {
+                // Đang ở trạng thái "Xem lại" (màu tím)
+                if (typeof I18n !== 'undefined') btnStart.innerText = I18n.t('lobby_btn_review');
+            }
+            const btnReset = document.getElementById('btnReset');
+            if (btnReset && typeof I18n !== 'undefined') {
+                const t = (k) => I18n.t(k);
+                if (btnReset.disabled) {
+                    // Hết lượt — cần tái tạo text (không có maxAllowed nữa, chỉ update prefix)
+                    const parts = btnReset.innerText.match(/\(([^)]+)\)/);
+                    const bracket = parts ? `(${parts[1]})` : '';
+                    btnReset.innerText = `${t('lobby_btn_no_attempt')} ${bracket}`;
+                } else {
+                    const parts = btnReset.innerText.match(/\(([^)]+)\)/);
+                    const bracket = parts ? `(${parts[1]})` : '';
+                    btnReset.innerText = `${t('lobby_btn_redo_count')} ${bracket}`;
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
