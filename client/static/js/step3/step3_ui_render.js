@@ -17,12 +17,17 @@ const ABCD_ReadRange = {
                 
                 // Xử lý chuỗi để truyền vào onclick an toàn
                 const safeAns = (ans || "").toString().replace(/'/g, "\\'");
+                
+                const isMissing = !ans || ans.trim() === '';
+                const displayValue = isMissing ? '?' : ans;
+                const boxStyle = isMissing ? 'border-color: var(--color-danger); background: rgba(255, 77, 77, 0.1);' : '';
+                const valStyle = isMissing ? 'color: var(--color-danger); animation: pulseRed 1.5s infinite;' : '';
 
                 itemsHTML += `
-                    <div class="q-box ${typeClass}" 
+                    <div class="q-box ${typeClass}" style="${boxStyle}"
                          onclick="ABCD_Controller.quickEdit(${qNum}, '${sec.type}', '${safeAns}')">
                         <div class="q-info">Câu ${qNum} ${typeIcon}</div>
-                        <div class="q-value">${ans || '?'}</div>
+                        <div class="q-value" style="${valStyle}">${displayValue}</div>
                     </div>`;
             });
         });

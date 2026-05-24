@@ -9,7 +9,6 @@ const translations = {
         cancel: "Hủy",
         close: "Đóng",
         search: "Tìm kiếm...",
-
         mandatory: "Bắt buộc",
         optional: "Tùy chọn",
         alert_range: "Vui lòng nhập phạm vi câu hỏi!",
@@ -63,13 +62,10 @@ const translations = {
         yes: "CÓ",
         no: "KHÔNG",
         process: "Đang chuẩn bị dữ liệu...",
-
         question_label: "Câu",
         tf_labels: "Đ,S",
-
         from: "Từ",
         to: "Đến",
-
         abcd: "ABCD",
         listening: "NGHE",
         true_false: "ĐÚNG/SAI",
@@ -81,8 +77,6 @@ const translations = {
         compressing_webp: "Nén ảnh chuẩn WebP (Tối ưu 60%)...",
         optimizing_layers: "Tối ưu lớp hiển thị...",
         caching_metadata: "Ghi nhớ vân tay file đề...",
-
-        // Zestest Logs
         sorting_sections: "Sắp xếp các phần thi...",
         encoding_audio: "Chuẩn hóa âm thanh đầu ra...",
         generating_zestest_file: "Chuyển đổi sang định dạng .zestest...",
@@ -90,10 +84,13 @@ const translations = {
 
         // Student – Splash
         stu_splash_welcome: "Chào mừng bạn đến với",
+        stu_splash_welcome_back: "Chào mừng bạn trở lại!",
+        stu_splash_welcome_new: "Xin chào!",
 
         // Student – Lobby
         stu_lobby_banner: "Chào mừng bạn! Vui lòng nhập tên để vào thi.",
         stu_name_placeholder: "Nhập Họ Tên của bạn...",
+        stu_lobby_questions: "Câu hỏi",
         stu_exam_loading: "Đang tải tên đề...",
         stu_room_closed_title: "🛑 PHÒNG THI ĐÃ ĐÓNG",
         stu_room_closed_desc: "Giáo viên đã kết thúc phiên thi này. Bạn không thể nộp bài được nữa.",
@@ -109,15 +106,15 @@ const translations = {
         stu_tutorial_timer: "Hệ thống tự động nộp bài khi hết thời gian.",
         stu_unpack_loading: "(Đang chuẩn bị dữ liệu thi...)",
         stu_btn_understood: "TÔI ĐÃ HIỂU",
+        stu_lobby_loading: "Đang tải...",
 
         // Student – Countdown
         stu_countdown_ready: "Sẵn sàng chưa?",
         stu_countdown_wish: "Chúc bạn thi thật tốt!",
-
-        // Student – Quiz Header
         stu_btn_submit: "Nộp",
 
         // Student – Summary Page
+        stu_summary_title: "KẾT QUẢ",
         stu_summary_total: "Tổng",
         stu_summary_correct: "Đúng",
         stu_summary_warn: "Cảnh báo",
@@ -159,59 +156,42 @@ const translations = {
         stu_alert_no_network: "⚠️ Không thể kết nối với máy chủ. Đáp án đã được lưu tại máy bạn, vui lòng không tắt trình duyệt và thử nộp lại sau hoặc báo giáo viên.",
         stu_alert_done_score: "Đã nộp bài xong! Điểm của bạn: ",
         stu_alert_dev_detail: "Tính năng xem chi tiết đang được phát triển.",
-
-        // Student – Summary labels (JS)
         stu_label_total: "Tổng",
         stu_label_correct: "Đúng",
         stu_label_warn: "Vi phạm",
-
-        // Student – Detail page (JS)
         stu_tf_you: "BẠN",
         stu_tf_answer: "ĐÁP ÁN",
-
-        // Student – Security violation (JS)
         stu_violation_msg: "Cảnh báo: Bạn vừa ",
         stu_violation_suffix: "!",
-
-        // Student – Image error (JS)
         stu_img_error: "Không có dữ liệu ảnh đề thi.",
-
-        // Student – Splash status (JS)
         stu_splash_setup: "Đang thiết lập môi trường...",
+
         // Dashboard splash
         splash_connecting: "Đang kết nối server Zestest...",
         splash_checking: "Kiểm tra danh sách câu hỏi...",
         splash_init: "Đang khởi tạo...",
         splash_ready: "Sẵn sàng! Đang vào dashboard...",
-
-        // Dashboard top-bar & buttons
+        splash_welcome_back: "Chào mừng trở lại",
+        splash_hello: "Xin chào",
         btn_logout: "Logout",
         btn_register: "Đăng ký",
-
-        // Dashboard banner & community
         banner_restore: "📂 Thả file .zestest vào đây để khôi phục đề",
         community_label: "✨ Cộng đồng đã tạo",
         community_count_suffix: " đề thi",
         community_join: "Tham gia ngay 👥",
-
-        // Floating tooltips
         tooltip_support: "Hỗ trợ Zestest",
         tooltip_gift: "Quà tặng & Mời bạn",
-
-        // Gift modal
         gift_title: "🎁 Nhập mã quà tặng",
         gift_desc: "Nhập mã PRO của bạn để kích hoạt tính năng cao cấp.",
         gift_placeholder: "MÃ QUÀ TẶNG",
         gift_activate: "KÍCH HOẠT KEY",
-
-        // Loading & expired
         loading_processing: "Đang xử lý dữ liệu...",
         expired_notice_prefix: " đề thi đã hết hạn",
         expired_notice_suffix: " và được ẩn đi. Bạn có thể khôi phục bằng cách ném file .zestest vào vùng phía trên.",
 
         // Exam card buttons
         card_share: "Giao bài",
-        card_info: "Info",
+        card_info: "Điểm",
         card_download: "Tải",
         card_delete: "Del",
         card_time_counting: "⏱ Đang tính...",
@@ -221,9 +201,10 @@ const translations = {
         // Empty state
         empty_state_title: "Chưa có đề thi nào khả dụng",
         empty_state_sub: "Bấm \"Create\" phía trên hoặc thả file .zestest để bắt đầu!",
-
-        // Stats modal
         stats_title: "Thống kê kết quả",
+        stats_export: "Xuất Excel",
+
+        // Landing Page (obsolete duplicate cleaned)
         stats_no_results: "Chưa có học sinh nào nộp bài.",
         stats_submissions: "Số bài nộp",
         stats_avg_score: "Điểm trung bình",
@@ -259,25 +240,19 @@ const translations = {
         pro_feat4_title: "Không giới hạn học sinh",
         pro_feat4_sub: "Phòng thi hỗ trợ tới 100 học sinh làm bài cùng lúc.",
         pro_maintenance_title: "Tính năng đang bảo trì",
-        pro_maintenance_desc: "Hiện tại hệ thống thanh toán tự động chưa sẵn sàng. Tuy nhiên, Captain có thể liên hệ trực tiếp với mình để được hỗ trợ nâng cấp thủ công... hoặc biết đâu lại được tặng miễn phí quà làm quen nhé! 😉",
+        pro_maintenance_desc: "Hiện tại hệ thống thanh toán tự động chưa sẵn sàng.",
         pro_btn_zalo: "Nhắn Zalo Admin",
         pro_btn_community: "Cộng đồng",
         pro_btn_upgrade: "TÔI MUỐN NÂNG CẤP",
         pro_btn_later: "Để sau",
         pro_btn_back: "Quay lại",
-
-        // Room management upgrade prompt
         room_pro_required_title: "Tính năng cần phí duy trì hệ thống",
-        room_pro_required_desc: "Hệ thống giám sát Realtime tiêu tốn rất nhiều tài nguyên Server theo thời gian thực. Để duy trì Zestest ổn định, mình không thể mở miễn phí tính năng này cho tất cả mọi người được, rất mong bạn thông cảm và ủng hộ nhé! ❤️",
+        room_pro_required_desc: "Hệ thống giám sát Realtime tiêu tốn rất nhiều tài nguyên Server.",
         room_pro_btn_contact: "Liên hệ admin",
-
-        // Room management student grid
         room_waiting: "Hệ thống đã sẵn sàng. Đợi học sinh join...",
         room_student_anon: "Học sinh ẩn danh",
         room_progress_label: "Tiến độ",
         room_kick_confirm: "Bạn có chắc muốn mời học sinh ra khỏi phòng thi?",
-
-        // Share modal
         share_title: "🚀 Quản lý phòng thi",
         share_close: "Đóng (Esc)",
         share_link_label: "Link chia sẻ cho học sinh",
@@ -292,165 +267,41 @@ const translations = {
         share_per_student: "Mỗi học sinh",
         share_btn_save: "Lưu",
         share_reopen_notice: "Vừa mở lại phòng:",
-        share_reopen_desc: "Bạn hãy nhắc học sinh Reload (tải lại) trang thi thì mới có thể nộp bài được nhé!",
+        share_reopen_desc: "Bạn hãy nhắc học sinh Reload trang thi nhé!",
         share_doing: "👥 Đang làm bài",
         share_student_limit: "Giới hạn học sinh",
-        share_confirm_stop: "Bạn có chắc chắn muốn kết thúc phòng thi? Học sinh sẽ không thể nộp bài sau khi bạn bấm nút này.",
+        share_confirm_stop: "Kết thúc phòng thi?",
         share_confirm_open: "Mở lại phòng thi?",
         share_err_toggle: "Lỗi:",
         share_err_connect: "Lỗi kết nối server.",
         share_err_attempts: "Số lần làm phải >= 1",
         share_saved: "Lưu",
 
-        // Quota / Sorry modals
-        quota_guest_title: "Đăng nhập để tiếp tục",
-        quota_full_title: "Bạn đã hết lượt tạo đề",
-        quota_guest_desc: "Hạng GUEST hiện tại chỉ hỗ trợ tối đa 1 đề thi để thử nghiệm. Bạn đăng nhập ngay để nhận thêm nhiều slot và lưu trữ đề thi lâu dài nhé! ❤️",
-        quota_full_desc: "Hệ thống rất tiếc vì tài khoản của bạn đã hết slot lưu trữ. Để đảm bảo mọi người đều có trải nghiệm mượt mà và duy trì chi phí máy chủ, bạn vui lòng xóa bớt đề cũ hoặc nâng cấp PRO để mở rộng kho lưu trữ nhé! ❤️",
-        quota_btn_login: "Đăng nhập ngay",
-        quota_btn_upgrade: "Nâng cấp Premium",
-        quota_btn_later: "Để sau",
-        sorry_title: "Rất xin lỗi bạn...",
-        sorry_understood: "Tôi đã hiểu",
-        sorry_upgrade_link: "Nâng cấp gói PRO để không giới hạn"
+        // Landing Page
+        lp_hero_title: "Sở hữu Cổng thi & <span>Lớp học trực tuyến</span> mang tên bạn",
+        lp_hero_desc: "Số hóa đề thi giấy thành đề online trong chớp mắt. Tạo phòng thi riêng biệt, quản lý lớp học và chấm điểm tự động mà không cần cài đặt phức tạp.",
+        lp_btn_start: "BẮT ĐẦU NGAY",
+        lp_btn_learn: "TÌM HIỂU THÊM",
+        lp_feat_title: "Nền tảng chuyên nghiệp",
+        lp_feat_fast_title: "Số hóa đề thi siêu tốc",
+        lp_feat_fast_desc: "Biến 200 câu TOEIC thành đề online trong 1 chốc. Không còn tốn chi phí in ấn đề giấy hay mất hàng giờ để nhập liệu thủ công.",
+        lp_feat_ui_title: "Tự chủ thương hiệu",
+        lp_feat_ui_desc: "Tùy chỉnh Logo, tên thương hiệu và nhận diện cá nhân. Chuyên nghiệp hóa hình ảnh trong mắt học sinh.",
+        lp_feat_web_title: "Số hóa toàn diện",
+        lp_feat_web_desc: "Tự động hóa quy trình tạo đề, chấm bài và quản lý kết quả tập trung trên một website duy nhất.",
+        lp_why_title: "Tại sao nên chọn Zestest?",
+        lp_why_cost_title: "Chi phí cực thấp",
+        lp_why_cost_desc: "Thay vì bỏ ra hàng chục triệu xây dựng web, bạn chỉ tốn vài cốc cafe mỗi tháng để có hệ thống chuyên nghiệp.",
+        lp_why_install_title: "Không cần cài đặt",
+        lp_why_install_desc: "Sử dụng ngay trên trình duyệt, không tốn dung lượng máy, không lo virus.",
+        lp_why_cross_title: "Đa nền tảng",
+        lp_why_cross_desc: "Hoạt động hoàn hảo trên Windows, Mac, iPad, Android và cả Điện thoại.",
+        lp_privacy: "Chính sách bảo mật",
+        lp_terms: "Điều khoản sử dụng",
+        lp_cookie_msg: "Zestest sử dụng bộ nhớ trình duyệt để tối ưu trải nghiệm của bạn. Bằng cách sử dụng trang web, bạn đồng ý với chính sách của chúng tôi.",
+        lp_cookie_accept: "Đã hiểu"
     },
     en: {
-        // Dashboard splash
-        splash_connecting: "Connecting to Zestest server...",
-        splash_checking: "Checking question list...",
-        splash_init: "Initializing...",
-        splash_ready: "Ready! Loading dashboard...",
-
-        // Dashboard top-bar & buttons
-        btn_logout: "Logout",
-        btn_register: "Register",
-
-        // Dashboard banner & community
-        banner_restore: "📂 Drop .zestest file here to restore",
-        community_label: "✨ Community has created",
-        community_count_suffix: " exams",
-        community_join: "Join now 👥",
-
-        // Floating tooltips
-        tooltip_support: "Zestest Support",
-        tooltip_gift: "Gifts & Referrals",
-
-        // Gift modal
-        gift_title: "🎁 Enter gift code",
-        gift_desc: "Enter your PRO code to activate premium features.",
-        gift_placeholder: "GIFT CODE",
-        gift_activate: "ACTIVATE KEY",
-
-        // Loading & expired
-        loading_processing: "Processing data...",
-        expired_notice_prefix: " exam(s) expired",
-        expired_notice_suffix: " and hidden. Restore by dropping the .zestest file above.",
-
-        // Exam card buttons
-        card_share: "Share",
-        card_info: "Info",
-        card_download: "Download",
-        card_delete: "Del",
-        card_time_counting: "⏱ Counting...",
-        card_time_left: "Time left",
-        card_expired: "🔴 Expired",
-
-        // Empty state
-        empty_state_title: "No exams available",
-        empty_state_sub: "Click \"Create\" above or drop a .zestest file to get started!",
-
-        // Stats modal
-        stats_title: "Results Statistics",
-        stats_no_results: "No students have submitted yet.",
-        stats_submissions: "Submissions",
-        stats_avg_score: "Average Score",
-        stats_high_score: "Excellent (>= 8)",
-        stats_total_warn: "Total Warnings",
-        stats_col_student: "Student",
-        stats_col_score: "Score",
-        stats_col_correct: "Correct",
-        stats_col_warn: "Warnings",
-        stats_col_time: "Time",
-        stats_times: "time(s)",
-        stats_load_error: "Failed to load data.",
-
-        // Lobby – attempt tracking
-        lobby_submitted_title: "YOU HAVE ALREADY SUBMITTED",
-        lobby_submitted_desc: "You can review your results or choose to retake from the beginning.",
-        lobby_btn_review: "VIEW RESULTS",
-        lobby_btn_redo_count: "RETAKE",
-        lobby_btn_no_attempt: "NO ATTEMPTS LEFT",
-        lobby_attempt_max: "Max",
-        lobby_attempt_times: "attempt(s)",
-        lobby_confirm_redo: "Are you sure you want to retake?",
-
-        // PRO modal
-        pro_modal_title: "👑 Unlock Zestest PRO",
-        pro_modal_sub: "Upgrade to experience the full power of the system.",
-        pro_feat1_title: "Real-time Monitoring",
-        pro_feat1_sub: "See what students are doing and their progress right now.",
-        pro_feat2_title: "More Exam Slots",
-        pro_feat2_sub: "Up to 50 exams for PRO accounts.",
-        pro_feat3_title: "Extended Storage Time",
-        pro_feat3_sub: "Exams stored up to 30 days (instead of 4h/24h).",
-        pro_feat4_title: "Unlimited Students",
-        pro_feat4_sub: "Exam rooms support up to 100 students simultaneously.",
-        pro_maintenance_title: "Feature under maintenance",
-        pro_maintenance_desc: "The automated payment system is not ready yet. However, you can contact us directly for manual upgrades... or maybe get a free welcome gift! 😉",
-        pro_btn_zalo: "Message Zalo Admin",
-        pro_btn_community: "Community",
-        pro_btn_upgrade: "I WANT TO UPGRADE",
-        pro_btn_later: "Maybe later",
-        pro_btn_back: "Go back",
-
-        // Room management upgrade prompt
-        room_pro_required_title: "Feature requires system maintenance fee",
-        room_pro_required_desc: "The Realtime monitoring system consumes significant server resources. To keep Zestest stable, we cannot offer this feature for free to everyone. Thank you for your understanding and support! ❤️",
-        room_pro_btn_contact: "Contact admin",
-
-        // Room management student grid
-        room_waiting: "System ready. Waiting for students to join...",
-        room_student_anon: "Anonymous student",
-        room_progress_label: "Progress",
-        room_kick_confirm: "Are you sure you want to remove this student from the exam room?",
-
-        // Share modal
-        share_title: "🚀 Exam Room Management",
-        share_close: "Close (Esc)",
-        share_link_label: "Student share link",
-        share_copy: "📋 Copy",
-        share_copy_done: "✅ Copied!",
-        share_status_label: "Status",
-        share_status_open: "Open",
-        share_status_closed: "Closed",
-        share_btn_stop: "🛑 Stop",
-        share_btn_open: "🔓 Open",
-        share_max_attempts: "Max attempts",
-        share_per_student: "Per student",
-        share_btn_save: "Save",
-        share_reopen_notice: "Room just reopened:",
-        share_reopen_desc: "Please remind students to Reload the exam page before submitting!",
-        share_doing: "👥 Doing exam",
-        share_student_limit: "Student limit",
-        share_confirm_stop: "Are you sure you want to end the exam room? Students will not be able to submit after this.",
-        share_confirm_open: "Reopen the exam room?",
-        share_err_toggle: "Error:",
-        share_err_connect: "Server connection error.",
-        share_err_attempts: "Max attempts must be >= 1",
-        share_saved: "Save",
-
-        // Quota / Sorry modals
-        quota_guest_title: "Login to continue",
-        quota_full_title: "You have reached your exam limit",
-        quota_guest_desc: "GUEST accounts support a maximum of 1 exam for testing. Log in now to get more slots and long-term storage! ❤️",
-        quota_full_desc: "Your storage slots are full. To keep the platform smooth for everyone, please delete old exams or upgrade to PRO for more storage! ❤️",
-        quota_btn_login: "Login now",
-        quota_btn_upgrade: "Upgrade to Premium",
-        quota_btn_later: "Maybe later",
-        sorry_title: "We\'re so sorry...",
-        sorry_understood: "I understand",
-        sorry_upgrade_link: "Upgrade to PRO for no limits",
-
         // Common
         step: "Step",
         next: "Next →",
@@ -513,13 +364,10 @@ const translations = {
         yes: "YES",
         no: "NO",
         process: "Preparing data...",
-
         tf_labels: "T,F",
         question_label: "Question",
-
         from: "From",
         to: "To",
-
         abcd: "ABCD",
         listening: "LISTENING",
         true_false: "TRUE/FALSE",
@@ -530,7 +378,6 @@ const translations = {
         compressing_webp: "Compressing WebP (60% Optimized)...",
         optimizing_layers: "Optimizing display layers...",
         caching_metadata: "Caching file fingerprint...",
-
         sorting_sections: "Sorting exam sections...",
         encoding_audio: "Encoding audio standard...",
         generating_zestest_file: "Converting to .zestest format...",
@@ -538,10 +385,13 @@ const translations = {
 
         // Student – Splash
         stu_splash_welcome: "Welcome to",
+        stu_splash_welcome_back: "Welcome back!",
+        stu_splash_welcome_new: "Hello!",
 
         // Student – Lobby
         stu_lobby_banner: "Welcome! Please enter your name to start the exam.",
         stu_name_placeholder: "Enter your full name...",
+        stu_lobby_questions: "Questions",
         stu_exam_loading: "Loading exam...",
         stu_room_closed_title: "🛑 EXAM ROOM CLOSED",
         stu_room_closed_desc: "The teacher has ended this exam session. You can no longer submit.",
@@ -561,8 +411,6 @@ const translations = {
         // Student – Countdown
         stu_countdown_ready: "Are you ready?",
         stu_countdown_wish: "Good luck on your exam!",
-
-        // Student – Quiz Header
         stu_btn_submit: "Submit",
 
         // Student – Summary Page
@@ -573,6 +421,8 @@ const translations = {
         stu_summary_chart_wip: "[Chart in development]",
         stu_btn_redo: "Retake",
         stu_btn_detail: "View Details",
+        stu_summary_title: "RESULTS",
+        stu_lobby_loading: "Loading...",
 
         // Student – Detail Page
         stu_detail_back: "Back",
@@ -607,48 +457,198 @@ const translations = {
         stu_alert_no_network: "⚠️ Cannot connect to server. Your answers are saved locally. Do not close the browser — try submitting again later or notify your teacher.",
         stu_alert_done_score: "Submitted! Your score: ",
         stu_alert_dev_detail: "Detailed review is still under development.",
-
-        // Student – Summary labels (JS)
         stu_label_total: "Total",
         stu_label_correct: "Correct",
         stu_label_warn: "Violations",
-
-        // Student – Detail page (JS)
         stu_tf_you: "YOU",
         stu_tf_answer: "ANSWER",
-
-        // Student – Security violation (JS)
         stu_violation_msg: "Warning: You just ",
         stu_violation_suffix: "!",
-
-        // Student – Image error (JS)
         stu_img_error: "No exam image data found.",
+        stu_splash_setup: "Setting up environment...",
 
-        // Student – Splash status (JS)
-        stu_splash_setup: "Setting up environment..."
+        // Dashboard splash
+        splash_connecting: "Connecting to Zestest server...",
+        splash_checking: "Checking question list...",
+        splash_init: "Initializing...",
+        splash_ready: "Ready! Loading dashboard...",
+        splash_welcome_back: "Welcome back",
+        splash_hello: "Hello",
+        btn_logout: "Logout",
+        btn_register: "Register",
+        banner_restore: "📂 Drop .zestest file here to restore",
+        community_label: "✨ Community has created",
+        community_count_suffix: " exams",
+        community_join: "Join now 👥",
+        tooltip_support: "Zestest Support",
+        tooltip_gift: "Gifts & Referrals",
+        gift_title: "🎁 Enter gift code",
+        gift_desc: "Enter your PRO code to activate premium features.",
+        gift_placeholder: "GIFT CODE",
+        gift_activate: "ACTIVATE KEY",
+        loading_processing: "Processing data...",
+        expired_notice_prefix: " exam(s) expired",
+        expired_notice_suffix: " and hidden. Restore by dropping the .zestest file above.",
+
+        // Exam card buttons
+        card_share: "Share",
+        card_info: "Score",
+        card_download: "Download",
+        card_delete: "Del",
+        card_time_counting: "⏱ Counting...",
+        card_time_left: "Time left",
+        card_expired: "🔴 Expired",
+
+        // Empty state
+        empty_state_title: "No exams available",
+        empty_state_sub: "Click \"Create\" above or drop a .zestest file to get started!",
+        stats_title: "Results Statistics",
+        stats_export: "Export Excel",
+
+        // Landing Page (obsolete duplicate cleaned)
+        stats_no_results: "No students have submitted yet.",
+        stats_submissions: "Submissions",
+        stats_avg_score: "Average Score",
+        stats_high_score: "Excellent (>= 8)",
+        stats_total_warn: "Total Warnings",
+        stats_col_student: "Student",
+        stats_col_score: "Score",
+        stats_col_correct: "Correct",
+        stats_col_warn: "Warnings",
+        stats_col_time: "Time",
+        stats_times: "time(s)",
+        stats_load_error: "Failed to load data.",
+
+        // Lobby – attempt tracking
+        lobby_submitted_title: "YOU HAVE ALREADY SUBMITTED",
+        lobby_submitted_desc: "You can review your results or choose to retake from the beginning.",
+        lobby_btn_review: "VIEW RESULTS",
+        lobby_btn_redo_count: "RETAKE",
+        lobby_btn_no_attempt: "NO ATTEMPTS LEFT",
+        lobby_attempt_max: "Max",
+        lobby_attempt_times: "attempt(s)",
+        lobby_confirm_redo: "Are you sure you want to retake?",
+
+        // PRO modal
+        pro_modal_title: "👑 Unlock Zestest PRO",
+        pro_modal_sub: "Upgrade to experience the full power of the system.",
+        pro_feat1_title: "Real-time Monitoring",
+        pro_feat1_sub: "See what students are doing and their progress right now.",
+        pro_feat2_title: "More Exam Slots",
+        pro_feat2_sub: "Up to 50 exams for PRO accounts.",
+        pro_feat3_title: "Extended Storage Time",
+        pro_feat3_sub: "Exams stored up to 30 days (instead of 4h/24h).",
+        pro_feat4_title: "Unlimited Students",
+        pro_feat4_sub: "Exam rooms support up to 100 students simultaneously.",
+        pro_maintenance_title: "Feature under maintenance",
+        pro_maintenance_desc: "The automated payment system is not ready yet.",
+        pro_btn_zalo: "Message Zalo Admin",
+        pro_btn_community: "Community",
+        pro_btn_upgrade: "I WANT TO UPGRADE",
+        pro_btn_later: "Maybe later",
+        pro_btn_back: "Go back",
+        room_pro_required_title: "Feature requires maintenance fee",
+        room_pro_required_desc: "The Realtime monitoring system consumes server resources.",
+        room_pro_btn_contact: "Contact admin",
+        room_waiting: "System ready. Waiting for students...",
+        room_student_anon: "Anonymous student",
+        room_progress_label: "Progress",
+        room_kick_confirm: "Remove this student?",
+        share_title: "🚀 Exam Room Management",
+        share_close: "Close (Esc)",
+        share_link_label: "Student share link",
+        share_copy: "📋 Copy",
+        share_copy_done: "✅ Copied!",
+        share_status_label: "Status",
+        share_status_open: "Open",
+        share_status_closed: "Closed",
+        share_btn_stop: "🛑 Stop",
+        share_btn_open: "🔓 Open",
+        share_max_attempts: "Max attempts",
+        share_per_student: "Per student",
+        share_btn_save: "Save",
+        share_reopen_notice: "Room reopened:",
+        share_reopen_desc: "Remind students to Reload!",
+        share_doing: "👥 Doing exam",
+        share_student_limit: "Student limit",
+        share_confirm_stop: "End the exam room?",
+        share_confirm_open: "Reopen the exam room?",
+        share_err_toggle: "Error:",
+        share_err_connect: "Server error.",
+        share_err_attempts: "Max attempts must be >= 1",
+        share_saved: "Save",
+
+        // Landing Page
+        lp_hero_title: "Own your Online Exam Portal & <span>Virtual Classroom</span>",
+        lp_hero_desc: "Digitize paper exams into online tests in a blink. Create private exam rooms, manage classes and automate grading with zero installation hassle.",
+        lp_btn_start: "GET STARTED",
+        lp_btn_learn: "LEARN MORE",
+        lp_feat_title: "Professional Platform",
+        lp_feat_fast_title: "Super-Fast Exam Digitization",
+        lp_feat_fast_desc: "Turn 200 TOEIC questions into an online exam in a snap. Say goodbye to printing costs and hours of manual data entry.",
+        lp_feat_ui_title: "Brand Independence",
+        lp_feat_ui_desc: "Customize your Logo, brand name, and personal identity. Professionalize your image in the eyes of students.",
+        lp_feat_web_title: "Total Digitization",
+        lp_feat_web_desc: "Automate the process of creating exams, grading, and centralized result management on a single website.",
+        lp_why_title: "Why choose Zestest?",
+        lp_why_cost_title: "Low Cost",
+        lp_why_cost_desc: "Instead of spending millions on web building, you only spend a few cups of coffee a month for a professional system.",
+        lp_why_install_title: "No Installation",
+        lp_why_install_desc: "Use right on the browser, no disk space required, no virus worries.",
+        lp_why_cross_title: "Multi-platform",
+        lp_why_cross_desc: "Works perfectly on Windows, Mac, iPad, Android, and even mobile phones.",
+        lp_privacy: "Privacy Policy",
+        lp_terms: "Terms of Use",
+        lp_cookie_msg: "Zestest uses browser storage to optimize your experience. By using the website, you agree to our policies.",
+        lp_cookie_accept: "Got it"
     }
 };
 
 const I18n = {
-    locale: localStorage.getItem('zestest_lang') || 'vi',
+    locale: 'vi', // Mặc định
+
+    init() {
+        const saved = localStorage.getItem('zestest_lang');
+        if (saved && translations[saved]) {
+            this.locale = saved;
+        } else {
+            // Tự động nhận diện theo vùng (navigator.language)
+            const browserLang = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+            if (browserLang.includes('vi')) {
+                this.locale = 'vi';
+            } else {
+                this.locale = 'en';
+            }
+            localStorage.setItem('zestest_lang', this.locale);
+        }
+        this.apply();
+        this.updateUI(this.locale);
+    },
 
     t(key) {
-        return translations[this.locale][key] || key;
+        const langObj = translations[this.locale] || translations['en'] || translations['vi'] || {};
+        return langObj[key] || key;
     },
 
     setLocale(lang) {
+        if (!translations[lang]) lang = 'en';
         this.locale = lang;
         localStorage.setItem('zestest_lang', lang);
         this.apply();
-        // Phát sự kiện để các script khác biết ngôn ngữ đã đổi
+        this.updateUI(lang);
         window.dispatchEvent(new Event('languageChanged'));
     },
 
     apply() {
-        // Dịch các text thông thường
+        // Dịch các text thông thường (Dùng innerHTML để hỗ trợ các tag như <span>)
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
-            el.innerText = this.t(key);
+            const translation = this.t(key);
+            if (translation.includes('<')) {
+                el.innerHTML = translation;
+            } else {
+                el.innerText = translation;
+            }
         });
 
         // Dịch các placeholder của input
@@ -656,12 +656,36 @@ const I18n = {
             const key = el.getAttribute('data-i18n-placeholder');
             el.placeholder = this.t(key);
         });
+    },
+
+    updateUI(lang) {
+        const flags = { vi: '🇻🇳', en: '🇺🇸' };
+        const codes = { vi: 'VI', en: 'EN' };
+        
+        document.querySelectorAll('.current-lang-flag').forEach(el => {
+            el.innerText = flags[lang] || flags['vi'];
+        });
+        document.querySelectorAll('.current-lang-code').forEach(el => {
+            el.innerText = codes[lang] || codes['vi'];
+        });
+        
+        document.querySelectorAll('.lang-dropdown-content').forEach(el => {
+            el.classList.remove("show");
+        });
     }
 };
 
 // Hàm đóng mở menu
-function toggleLangMenu() {
-    document.getElementById("lang-content").classList.toggle("show");
+function toggleLangMenu(btn) {
+    // Nếu không truyền btn (từ code cũ), tìm cái đầu tiên
+    if (!btn) {
+        const el = document.querySelector(".lang-dropdown-content");
+        if (el) el.classList.toggle("show");
+        return;
+    }
+    const dropdown = btn.closest('.lang-dropdown');
+    const content = dropdown.querySelector('.lang-dropdown-content');
+    if (content) content.classList.toggle("show");
 }
 
 // Đóng menu nếu bấm ra ngoài
@@ -674,26 +698,7 @@ window.onclick = function (event) {
             }
         }
     }
-}
-
-// Cập nhật lại hàm setLocale để đổi cờ trên nút chính
-const originalSetLocale = I18n.setLocale;
-I18n.setLocale = function (lang) {
-    // Gọi hàm gốc
-    originalSetLocale.call(I18n, lang);
-
-    // Cập nhật giao diện nút
-    const flags = { vi: '🇻🇳', en: '🇺🇸', jp: '🇯🇵' };
-    const codes = { vi: 'VI', en: 'EN', jp: 'JP' };
-
-    document.getElementById('current-lang-flag').innerText = flags[lang];
-    document.getElementById('current-lang-code').innerText = codes[lang];
-
-    // Đóng menu sau khi chọn
-    document.getElementById("lang-content").classList.remove("show");
 };
 
 // Tự động chạy khi DOM sẵn sàng
-document.addEventListener('DOMContentLoaded', () => I18n.apply());
-
-
+document.addEventListener('DOMContentLoaded', () => I18n.init());

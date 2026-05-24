@@ -5,6 +5,7 @@ const UIManager = {
         this.checkDevice();
         window.addEventListener('resize', () => this.checkDevice());
         this.initThemeWithAnimation();
+        this.updateSplashGreeting();
     },
 
     checkDevice() {
@@ -12,6 +13,25 @@ const UIManager = {
         // Dùng classList.toggle để không ảnh hưởng đến các class khác như dark-mode
         document.body.classList.toggle('is-mobile', this.isMobile);
         document.body.classList.toggle('is-pc', !this.isMobile);
+    },
+    
+    updateSplashGreeting() {
+        const greetingEl = document.getElementById('splash-greeting');
+        if (!greetingEl) return;
+
+        const user = localStorage.getItem('user');
+        const workingId = localStorage.getItem('working_id');
+        
+        // Nếu có i18n thì dùng, không thì dùng mặc định
+        if (typeof I18n !== 'undefined') {
+            if (user || workingId) {
+                greetingEl.innerText = I18n.t('splash_welcome_back');
+            } else {
+                greetingEl.innerText = I18n.t('splash_hello');
+            }
+        } else {
+            greetingEl.innerText = (user || workingId) ? "Chào mừng trở lại" : "Xin chào";
+        }
     },
 
     initThemeWithAnimation() {

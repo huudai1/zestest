@@ -1,6 +1,9 @@
 name = "zestest-api"
 main = "server/src/index.ts"
 compatibility_date = "2026-05-02"
+routes = [
+    { pattern = "*.zestest.com/*", zone_name = "zestest.com" }
+]
 
 [assets]
 directory = "client"

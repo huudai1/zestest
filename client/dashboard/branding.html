@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tùy biến Giao diện (White-labeling) - Zestest</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/splash.css">
+    <link rel="stylesheet" href="/static/css/zestest-main.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="/static/css/improve.css">
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <script>
+        // Apply theme instantly before render
+        (function() {
+            if (localStorage.getItem('theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+        })();
+    </script>
+    <style>
+        .branding-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-light);
+            width: 100%;
+        }
+
+        .btn-back-main {
+            background: var(--btn-gray);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+            transition: all 0.2;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            outline: none;
+        }
+
+        .btn-back-main:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+            transform: translateY(-2px);
+        }
+
+        .form-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .form-input {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(0, 149, 255, 0.15);
+        }
+
+        .upgrade-box {
+            text-align: center;
+            padding: 50px 30px;
+            background: linear-gradient(135deg, rgba(241, 196, 15, 0.05) 0%, rgba(243, 156, 18, 0.05) 100%);
+            border: 1px dashed #f1c40f;
+            border-radius: 20px;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .upgrade-icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .upload-box {
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            cursor: pointer;
+            color: var(--text-sub);
+            transition: all 0.2s;
+            background: rgba(0,0,0,0.02);
+            font-size: 14px;
+        }
+
+        .upload-box:hover {
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+            background: rgba(0, 149, 255, 0.05);
+        }
+
+        .color-picker-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            border-radius: 10px;
+        }
+
+        .color-picker {
+            width: 45px;
+            height: 45px;
+            padding: 0;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: transparent;
+        }
+
+        .preview-mockup-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.02);
+            border: 1px solid var(--border-base);
+            border-radius: 16px;
+            padding: 30px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .live-badge {
+            background: #e11d48;
+            color: white;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 20px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .logo-preview-img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 10px;
+            object-fit: contain;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Aligned to main dashboard layout structure to match PC and Mobile CSS perfectly -->
+    <div id="dashboard-page" class="active">
+        <div class="mobile-container">
+            <!-- Header -->
+            <div class="branding-header">
+                <button class="btn-back-main" onclick="window.location.href='/dashboard/?start=true'">
+                    ← Quay lại
+                </button>
+                <h2 style="margin: 0; font-size: 20px; font-weight: 800; color: var(--text-main);">🎨 Tùy biến Giao diện</h2>
+            </div>
+
+            <!-- Loading spinner -->
+            <div id="loading-gate" style="text-align: center; padding: 50px 0; width: 100%;">
+                <div class="loader" style="margin: 0 auto 15px;"></div>
+                <p style="color: var(--text-sub); font-size: 14px;">Đang tải cấu hình của bạn...</p>
+            </div>
+
+            <!-- Premium check failed block (Hidden by default) -->
+            <div id="upgrade-prompt" style="display: none; width: 100%;">
+                <div class="upgrade-box">
+                    <div class="upgrade-icon">👑</div>
+                    <h3 style="color: #f1c40f; margin-top: 0;" data-i18n="room_pro_required_title">Tính năng Premium</h3>
+                    <p style="color: var(--text-sub); max-width: 500px; margin: 0 auto 25px; line-height: 1.6; font-size: 14px;">
+                        Tùy biến Giao diện (White-labeling) là tính năng cao cấp dành riêng cho gói tài khoản PRO và Premium của Zestest. Nâng cấp ngay để tạo dựng thương hiệu cá nhân của riêng bạn!
+                    </p>
+                    <button onclick="window.open('https://zalo.me/0961416095', '_blank')" class="btn-action primary" style="display: inline-block; padding: 12px 30px; font-weight: 800; border-radius: 12px; background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%); color: #000; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(241, 196, 15, 0.3);">
+                        💬 LIÊN HỆ NÂNG CẤP NGAY
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Branding Panel (Hidden by default, shown after loading) -->
+            <div id="branding-panel" style="display: none; width: 100%;" class="branding-layout">
+                <!-- Controls Form -->
+                <div class="branding-controls">
+                    <div class="form-group">
+                        <label class="form-label">Đường dẫn định danh (Subdomain)</label>
+                        <div class="subdomain-input-group">
+                            <input type="text" class="form-input" placeholder="ten-trung-tam" id="brand-subdomain" oninput="StandaloneBranding.updatePreview()">
+                            <span class="subdomain-suffix">.zestest.com</span>
+                        </div>
+                        <small style="color: var(--text-sub); display: block; margin-top: 6px;">Học sinh sẽ truy cập cổng thi của bạn qua đường dẫn này.</small>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 20px;">
+                        <label class="form-label">Logo / Ảnh đại diện (Khuyên dùng tỉ lệ 1:1)</label>
+                        <div class="upload-box" onclick="document.getElementById('brand-logo-input').click()">
+                            <span id="logo-status">📷 Nhấn để tải ảnh lên (Ảnh sẽ tự nén WebP)</span>
+                            <input type="file" id="brand-logo-input" style="display: none;" accept="image/*" onchange="StandaloneBranding.handleLogoUpload(event)">
+                        </div>
+                        <!-- Existing Logo Preview -->
+                        <div id="logo-preview-container" style="margin-top: 15px; display: none;">
+                            <span style="font-size: 12px; color: var(--text-sub); font-weight: 600; display: block; margin-bottom: 5px;">Logo hiện tại:</span>
+                            <div id="logo-preview-box" style="width: 80px; height: 80px; border: 1px solid var(--border-base); border-radius: 12px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.02); overflow: hidden; padding: 5px;">
+                                <!-- Injected by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-top: 20px;">
+                        <label class="form-label">Màu sắc chủ đạo</label>
+                        <div class="color-picker-wrapper">
+                            <input type="color" class="color-picker" id="brand-color" value="#0095ff" oninput="StandaloneBranding.updatePreview()">
+                            <div style="display: flex; flex-direction: column;">
+                                <span style="font-size: 13px; font-weight: 700; color: var(--text-main);">Tông màu thương hiệu</span>
+                                <span style="font-size: 11px; color: var(--text-sub);">Áp dụng cho tiêu đề, các nút bấm chính</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn-action primary" style="width: 100%; margin-top: 35px; padding: 15px 0; font-size: 15px;" id="btn-save-config" onclick="StandaloneBranding.saveConfig(this)">
+                        💾 Lưu Cấu Hình Branding
+                    </button>
+                </div>
+
+                <!-- Mobile Live Preview -->
+                <div class="branding-preview-container">
+                    <div class="preview-mockup-wrapper">
+                        <span class="live-badge">🔴 LIVE PREVIEW</span>
+                        <h4 style="margin-top: 0; margin-bottom: 20px; text-align: center; color: var(--text-main); font-weight: 800;">Giao diện của học sinh</h4>
+                        
+                        <div class="preview-device">
+                            <div class="mockup-header" id="preview-header" style="background: #0095ff;">
+                                <div class="mockup-logo" id="preview-logo"></div>
+                            </div>
+                            <div class="mockup-body">
+                                <div class="mockup-title"></div>
+                                <div class="mockup-line"></div>
+                                <div class="mockup-line short"></div>
+                                <div class="mockup-button" id="preview-button" style="background: #0095ff;">Bắt đầu thi</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/static/js/storage/storage_manager.js"></script>
+    <script src="/static/js/storage/session_manager.js"></script>
+    <script src="/static/js/server/client_internal_actions.js"></script>
+    <script src="/static/js/auth/identity_manager.js"></script>
+
+    <script>
+        const StandaloneBranding = {
+            currentLogoBlob: null,
+            loadedLogoUrl: null,
+
+            async init() {
+                try {
+                    // Initialize IdentityManager
+                    if (window.IdentityManager) {
+                        window.IdentityManager.init();
+                    }
+
+                    const teacherId = window.IdentityManager ? window.IdentityManager.getUserId() : null;
+                    if (!teacherId) {
+                        alert("Không tìm thấy thông tin tài khoản. Vui lòng đăng nhập lại.");
+                        window.location.href = '/dashboard/?start=true';
+                        return;
+                    }
+
+                    // Check Premium Rank
+                    const tier = window.IdentityManager ? window.IdentityManager.getTier() : 'GUEST';
+                    const isPremium = tier.includes('PREMIUM') || tier.includes('PRO') || tier.includes('ADMIN');
+
+                    document.getElementById('loading-gate').style.display = 'none';
+
+                    if (!isPremium) {
+                        document.getElementById('upgrade-prompt').style.display = 'block';
+                        return;
+                    }
+
+                    document.getElementById('branding-panel').style.display = 'flex';
+                    await this.loadConfig(teacherId);
+
+                } catch (e) {
+                    console.error("Lỗi khởi chạy Branding:", e);
+                    document.getElementById('loading-gate').innerHTML = `
+                        <div style="color: var(--color-danger); font-size: 40px; margin-bottom: 10px;">⚠️</div>
+                        <p style="color: var(--color-danger); font-weight: 700;">Lỗi kết nối dữ liệu. Vui lòng thử lại.</p>
+                    `;
+                }
+            },
+
+            async loadConfig(teacherId) {
+                try {
+                    const res = await fetch(`/api/branding/teacher/${teacherId}`);
+                    if (!res.ok) return;
+
+                    const data = await res.json();
+                    
+                    if (data.success && data.data) {
+                        const b = data.data;
+                        const inputSubdomain = document.getElementById('brand-subdomain');
+                        const inputColor = document.getElementById('brand-color');
+                        
+                        if (inputSubdomain) inputSubdomain.value = b.subdomain || '';
+                        if (inputColor) inputColor.value = b.primary_color || '#0095ff';
+                        
+                        if (b.logo_url) {
+                            this.loadedLogoUrl = b.logo_url;
+                            const container = document.getElementById('logo-preview-container');
+                            const box = document.getElementById('logo-preview-box');
+                            if (container && box) {
+                                box.innerHTML = `<img src="${b.logo_url}" class="logo-preview-img">`;
+                                container.style.display = 'block';
+                            }
+
+                            // Update mockup preview logo too
+                            const previewLogo = document.getElementById('preview-logo');
+                            if (previewLogo) {
+                                previewLogo.style.backgroundImage = `url(${b.logo_url})`;
+                                previewLogo.style.backgroundSize = 'cover';
+                                previewLogo.style.backgroundPosition = 'center';
+                                previewLogo.style.backgroundColor = 'transparent';
+                            }
+                        }
+                        
+                        this.updatePreview();
+                    }
+                } catch (e) {
+                    console.error("Lỗi tải cấu hình Branding:", e);
+                }
+            },
+
+            handleLogoUpload(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                document.getElementById('logo-status').innerText = `✅ Đã chọn: ${file.name}`;
+
+                // Live preview in mockup instantly
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const previewLogo = document.getElementById('preview-logo');
+                    if (previewLogo) {
+                        previewLogo.style.backgroundImage = `url(${e.target.result})`;
+                        previewLogo.style.backgroundSize = 'cover';
+                        previewLogo.style.backgroundPosition = 'center';
+                        previewLogo.style.borderRadius = '50%';
+                        previewLogo.style.backgroundColor = 'transparent';
+                    }
+                };
+                reader.readAsDataURL(file);
+
+                // Compression to WebP via canvas
+                this.compressImageToWebP(file).then(webpBlob => {
+                    console.log("Original:", (file.size / 1024).toFixed(2), "KB");
+                    console.log("WebP:", (webpBlob.size / 1024).toFixed(2), "KB");
+                    this.currentLogoBlob = webpBlob;
+                    document.getElementById('logo-status').innerText = `✅ Đã nén WebP: ${(webpBlob.size / 1024).toFixed(1)} KB (Sẵn sàng)`;
+                });
+            },
+
+            compressImageToWebP(file) {
+                return new Promise((resolve) => {
+                    const img = new Image();
+                    img.src = URL.createObjectURL(file);
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        const MAX_WIDTH = 500;
+                        const MAX_HEIGHT = 500;
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > MAX_WIDTH) {
+                                height *= MAX_WIDTH / width;
+                                width = MAX_WIDTH;
+                            }
+                        } else {
+                            if (height > MAX_HEIGHT) {
+                                width *= MAX_HEIGHT / height;
+                                height = MAX_HEIGHT;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        canvas.toBlob((blob) => {
+                            resolve(blob);
+                        }, 'image/webp', 0.85);
+                    };
+                });
+            },
+
+            updatePreview() {
+                const color = document.getElementById('brand-color').value;
+                const header = document.getElementById('preview-header');
+                const button = document.getElementById('preview-button');
+                
+                if (header) header.style.background = color;
+                if (button) button.style.background = color;
+            },
+
+            async saveConfig(btn) {
+                const subdomain = document.getElementById('brand-subdomain').value.trim();
+                const color = document.getElementById('brand-color').value;
+
+                if (!subdomain) {
+                    alert("Vui lòng nhập đường dẫn định danh (Subdomain).");
+                    return;
+                }
+
+                // Subdomain validation
+                const regex = /^[a-z0-9\-]+$/;
+                if (!regex.test(subdomain)) {
+                    alert("Đường dẫn định danh chỉ được chứa chữ thường không dấu (a-z), số (0-9) và dấu gạch ngang (-).");
+                    return;
+                }
+
+                const btnText = btn.innerText;
+                btn.innerText = "⏳ Đang lưu cấu hình...";
+                btn.disabled = true;
+                btn.style.opacity = '0.7';
+
+                try {
+                    const teacherId = window.IdentityManager ? window.IdentityManager.getUserId() : null;
+                    if (!teacherId) throw new Error("Không tìm thấy thông tin tài khoản.");
+
+                    let logoUrl = this.loadedLogoUrl;
+
+                    // 1. Upload new compressed WebP logo to R2
+                    if (this.currentLogoBlob) {
+                        const formData = new FormData();
+                        formData.append('file', this.currentLogoBlob, 'logo.webp');
+
+                        const uploadRes = await fetch('/api/branding/upload', {
+                            method: 'POST',
+                            headers: { 'X-Teacher-ID': teacherId },
+                            body: formData
+                        });
+                        const uploadData = await uploadRes.json();
+                        if (!uploadData.success) throw new Error(uploadData.message || "Lỗi tải ảnh lên server.");
+                        logoUrl = uploadData.url;
+                    }
+
+                    // 2. Save settings to DB
+                    const saveRes = await fetch('/api/branding', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            teacher_id: teacherId,
+                            subdomain: subdomain,
+                            primary_color: color,
+                            logo_url: logoUrl
+                        })
+                    });
+                    const saveData = await saveRes.json();
+                    if (!saveData.success) throw new Error(saveData.message || "Lỗi lưu cấu hình.");
+
+                    alert("✅ Cấu hình Branding đã được lưu thành công!");
+                    
+                    // Reload settings
+                    this.loadedLogoUrl = logoUrl;
+                    if (logoUrl) {
+                        const container = document.getElementById('logo-preview-container');
+                        const box = document.getElementById('logo-preview-box');
+                        if (container && box) {
+                            box.innerHTML = `<img src="${logoUrl}" class="logo-preview-img">`;
+                            container.style.display = 'block';
+                        }
+                    }
+
+                } catch (error) {
+                    console.error("Lỗi lưu cấu hình Branding:", error);
+                    alert("❌ Lỗi: " + error.message);
+                } finally {
+                    btn.innerText = btnText;
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                }
+            }
+        };
+
+        // Initialize when DOM ready
+        document.addEventListener('DOMContentLoaded', () => {
+            StandaloneBranding.init();
+        });
+    </script>
+</body>
+
+</html>

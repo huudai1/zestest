@@ -1,7 +1,8 @@
-# 1. Giữ nguyên các file tĩnh (js, css, hình ảnh)
+# Zestest Redirects
+/landingpage   /                        301
+/landing       /                        301
+/app           /dashboard/              301
+/dashboard     /dashboard/              301
 
-
-
-# 3. Điều hướng cho Học sinh (Trỏ về thư mục, không trỏ vào file .html)
-/lobby/*   /static/student/        200
-
+# Student Lobby
+/lobby/*       /static/student/         200

@@ -78,6 +78,13 @@ window.DashboardRender = {
             subtextEl.innerText = isPremium ? "Gia hạn" : "Upgrade";
         }
 
+        const tier = data.tier || 'GUEST';
+        const isPremium = tier.includes('PREMIUM') || tier.includes('PRO');
+        const btnAnalytics = document.getElementById('btn-analytics');
+        const btnBranding = document.getElementById('btn-branding');
+        if (btnAnalytics) btnAnalytics.style.display = isPremium ? 'flex' : 'none';
+        if (btnBranding) btnBranding.style.display = 'flex';
+
         const quotaText = document.getElementById('quota-text-main');
         const quotaFill = document.getElementById('quota-fill-main');
         if (quotaText) quotaText.innerText = `${data.active_count} / ${data.max_active_exams}`;
@@ -184,7 +191,7 @@ window.DashboardRender = {
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 25px;">
                     <!-- NÚT KẾT THÚC / MỞ LẠI -->
                     <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 20px; border-radius: 24px; display: flex; align-items: center; justify-content: space-between; gap: 15px;">
                         <div>
@@ -214,6 +221,19 @@ window.DashboardRender = {
                             <button id="btnSaveSettings" style="background: rgba(59, 130, 246, 0.1); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.2); padding: 10px; border-radius: 10px; cursor: pointer; font-size: 12px; font-weight: 800;">${t('share_btn_save')}</button>
                         </div>
                     </div>
+
+                    <!-- YÊU CẦU ĐĂNG NHẬP -->
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 20px; border-radius: 24px; display: flex; align-items: center; justify-content: space-between; gap: 15px;">
+                        <div>
+                            <h4 style="margin: 0; color: #fff; font-size: 14px;">Định danh Học sinh</h4>
+                            <p style="margin: 3px 0 0 0; font-size: 12px; color: #f1c40f; font-weight: 700;">PRO Feature</p>
+                        </div>
+                        <button id="btnRequireLogin" data-state="off"
+                                style="padding: 10px 20px; border-radius: 12px; border: none; font-weight: 800; cursor: pointer; transition: 0.3s; font-size: 13px;
+                                       background: rgba(255, 255, 255, 0.1); color: #94a3b8; border: 1px solid rgba(255,255,255,0.2);">
+                            TẮT
+                        </button>
+                    </div>
                 </div>
                 
                 <div id="reopenNotice" style="display: none; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); padding: 15px; border-radius: 16px; margin-bottom: 25px; color: #60a5fa; font-size: 13px; align-items: center; gap: 10px;">
@@ -241,14 +261,59 @@ window.DashboardRender = {
         const btnCopy = document.getElementById('btnCopyLink');
         if (btnCopy) {
             btnCopy.onclick = async function () {
-                await navigator.clipboard.writeText(link);
-                const original = this.innerHTML;
-                this.innerHTML = "✅ Xong!";
-                this.style.filter = "hue-rotate(90deg)";
-                setTimeout(() => {
-                    this.innerHTML = original;
-                    this.style.filter = "none";
-                }, 2000);
+                try {
+                    await navigator.clipboard.writeText(link);
+                    const originalText = this.innerText;
+                    this.innerText = typeof I18n !== 'undefined' ? I18n.t('share_copy_done') : '✅ Xong!';
+                    this.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
+                    setTimeout(() => {
+                        this.innerText = originalText;
+                        this.style.background = 'linear-gradient(135deg, #0095ff 0%, #0070f3 100%)';
+                    }, 2000);
+                } catch (err) {
+                    console.error('Failed to copy text: ', err);
+                }
+            };
+        }
+
+        const btnRequireLogin = document.getElementById('btnRequireLogin');
+        if (btnRequireLogin) {
+            btnRequireLogin.onclick = async () => {
+                const isOff = btnRequireLogin.getAttribute('data-state') === 'off';
+                const newState = isOff ? 'on' : 'off';
+                
+                // Cập nhật UI trước cho mượt
+                if (isOff) {
+                    btnRequireLogin.setAttribute('data-state', 'on');
+                    btnRequireLogin.innerText = 'BẬT';
+                    btnRequireLogin.style.background = 'rgba(241, 196, 15, 0.1)';
+                    btnRequireLogin.style.color = '#f1c40f';
+                    btnRequireLogin.style.border = '1px solid rgba(241, 196, 15, 0.3)';
+                } else {
+                    btnRequireLogin.setAttribute('data-state', 'off');
+                    btnRequireLogin.innerText = 'TẮT';
+                    btnRequireLogin.style.background = 'rgba(255, 255, 255, 0.1)';
+                    btnRequireLogin.style.color = '#94a3b8';
+                    btnRequireLogin.style.border = '1px solid rgba(255, 255, 255, 0.2)';
+                }
+                
+                // Gọi API lưu trạng thái
+                try {
+                    const res = await fetch(`/api/exams/${examId}/settings`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-User-ID': ClientInternal.getExistingId()
+                        },
+                        body: JSON.stringify({ require_login: isOff })
+                    });
+                    const data = await res.json();
+                    if (!data.success) {
+                        alert("Lỗi lưu cài đặt: " + data.message);
+                    }
+                } catch (e) {
+                    console.error("Lỗi cập nhật require_login", e);
+                }
             };
         }
 
@@ -493,7 +558,10 @@ window.DashboardRender = {
             <div style="max-width: 850px; margin: 0 auto; width: 100%; animation: modalPop 0.4s ease;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
                     <h2 style="margin: 0; font-size: 24px; font-weight: 800; color: #fff;">📊 ${t('stats_title')}</h2>
-                    <button id="btnCloseStats" style="background: rgba(255,255,255,0.05); border: none; color: #94a3b8; padding: 8px 20px; border-radius: 10px; cursor: pointer;">${t('close')}</button>
+                    <div style="display: flex; gap: 10px;">
+                        <button id="btnExportStats" style="display: none; background: #22c55e; border: none; color: #fff; padding: 8px 20px; border-radius: 10px; cursor: pointer; font-weight: 700; font-size: 13px;">📥 ${t('stats_export')}</button>
+                        <button id="btnCloseStats" style="background: rgba(255,255,255,0.05); border: none; color: #94a3b8; padding: 8px 20px; border-radius: 10px; cursor: pointer;">${t('close')}</button>
+                    </div>
                 </div>
                 <div id="statsContent" style="min-height: 300px; display: flex; align-items: center; justify-content: center;">
                     <div class="loader"></div>
@@ -570,10 +638,65 @@ window.DashboardRender = {
                     </div>
                 </div>
             `;
+
+            // Show and init export button
+            const btnExport = document.getElementById('btnExportStats');
+            if (btnExport) {
+                btnExport.style.display = 'block';
+                btnExport.onclick = () => this.exportStatsToExcel(examId, results);
+            }
         } catch (err) {
             console.error(err);
             document.getElementById('statsContent').innerHTML = `<div style="color: #ef4444;">` + t('stats_load_error') + `</div>`;
         }
+    },
+
+    exportStatsToExcel(examId, results) {
+        if (!results || results.length === 0) return;
+        const t = typeof I18n !== 'undefined' ? (k) => I18n.t(k) : (k) => k;
+
+        // Create HTML table for Excel (preserves UTF-8 and formatting better than CSV)
+        let html = `
+            <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+            <head><meta charset="utf-8"></head>
+            <body>
+                <table border="1">
+                    <tr style="background-color: #8b5cf6; color: white; font-weight: bold;">
+                        <th>${t('stats_col_student')}</th>
+                        <th>${t('stats_col_score')}</th>
+                        <th>${t('stats_col_correct')}</th>
+                        <th>${t('stats_col_warn')}</th>
+                        <th>${t('stats_col_time')}</th>
+                    </tr>
+        `;
+
+        results.forEach(r => {
+            html += `
+                <tr>
+                    <td>${r.student_name}</td>
+                    <td>${r.score.toFixed(1)}</td>
+                    <td>${r.total_correct}/${r.total_questions}</td>
+                    <td>${r.warning_count || 0}</td>
+                    <td>${new Date(r.created_at).toLocaleString()}</td>
+                </tr>
+            `;
+        });
+
+        html += `</table></body></html>`;
+
+        const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        let fileName = examId;
+        if (examId.includes('__')) {
+            fileName = examId.split('__')[1];
+        }
+        a.download = `${fileName}.xls`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     }
 };
 

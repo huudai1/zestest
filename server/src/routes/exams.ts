@@ -187,7 +187,7 @@ examsRoutes.post('/:exam_id/status', async (c) => {
 examsRoutes.post('/:exam_id/settings', async (c) => {
     const exam_id = c.req.param('exam_id');
     const user_id = c.req.header('X-User-ID');
-    const { max_attempts } = await c.req.json<{ max_attempts: number }>();
+    const body = await c.req.json<{ max_attempts?: number, require_login?: boolean }>();
 
     if (!user_id) return c.json({ success: false, message: 'Thiếu X-User-ID header' }, 401);
 
@@ -199,11 +199,25 @@ examsRoutes.post('/:exam_id/settings', async (c) => {
         if (!exam) return c.json({ success: false, message: 'Đề thi không tồn tại.' }, 404);
         if (exam.owner_id !== user_id) return c.json({ success: false, message: 'Bạn không có quyền chỉnh sửa đề này.' }, 403);
 
-        await c.env.DB.prepare(
-            `UPDATE exams SET max_attempts = ? WHERE id = ?`
-        ).bind(max_attempts || 1, exam_id).run();
+        const fields = [];
+        const values = [];
+        
+        if (body.max_attempts !== undefined) {
+            fields.push("max_attempts = ?");
+            values.push(body.max_attempts);
+        }
+        if (body.require_login !== undefined) {
+            fields.push("require_login = ?");
+            values.push(body.require_login ? 1 : 0);
+        }
 
-        console.log(`✅ [API] Đã cập nhật cài đặt đề thi ${exam_id}: max_attempts=${max_attempts}.`);
+        if (fields.length > 0) {
+            values.push(exam_id);
+            await c.env.DB.prepare(`UPDATE exams SET ${fields.join(', ')} WHERE id = ?`)
+                .bind(...values).run();
+        }
+
+        console.log(`✅ [API] Đã cập nhật cài đặt đề thi ${exam_id}`);
         return c.json({ success: true });
     } catch (error: any) {
         console.error("❌ [API] Lỗi khi cập nhật cài đặt:", error);

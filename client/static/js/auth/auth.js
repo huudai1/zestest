@@ -68,13 +68,40 @@ function getBaseUrl() {
 // --- Auth Actions ---
 async function loginGoogle() {
     console.log("🔐 [Auth] Chuyển sang vùng Xác thực An toàn (Không Popup)...");
-    window.location.href = window.location.origin + '/?login=1';
+    window.location.href = window.location.origin + '/dashboard/?login=1';
 }
 
 async function logoutGoogle() {
-    console.log("🚪 [Auth] Chuyển sang vùng Đăng xuất An toàn...");
-    // Phải chuyển sang vùng không bị cô lập mới có thể Đăng xuất Firebase thành công
-    window.location.href = window.location.origin + '/?logout=1';
+    console.log("🚪 [Auth] Đăng xuất cục bộ ngay tại Dashboard...");
+    try {
+        await signOut(auth);
+    } catch (err) {
+        console.error("Lỗi signOut Firebase:", err);
+    }
+    
+    try {
+        if (window.StorageManager && window.StorageManager.wipeAllData) {
+            await window.StorageManager.wipeAllData();
+        }
+        if (window.SessionManager && window.SessionManager.clearAll) {
+            window.SessionManager.clearAll();
+        }
+    } catch (e) {
+        console.warn("Storage wipe warn:", e);
+    }
+    
+    localStorage.clear();
+    sessionStorage.clear();
+    
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+        const cookie = cookies[i];
+        const eqPos = cookie.indexOf("=");
+        const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
+    }
+    
+    window.location.href = window.location.origin + '/dashboard/?start=true';
 }
 
 // --- Expose ra window để các script khác có thể dùng ---
@@ -175,7 +202,7 @@ if (IS_AUTH_MODE) {
                     document.cookie = "working_id=" + userData.uid + "; path=/; max-age=31536000";
                 }
 
-                window.location.href = window.location.origin + '/';
+                window.location.href = window.location.origin + '/dashboard/?start=true';
             } else {
                 document.body.innerHTML = `<h3 style="color:red; text-align:center;">Lỗi Đồng Bộ Server</h3>`;
                 isSyncing = false;
@@ -207,10 +234,10 @@ if (IS_AUTH_MODE) {
             document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/";
         }
         
-        window.location.href = window.location.origin + '/';
+        window.location.href = window.location.origin + '/dashboard/?start=true';
     }).catch(err => {
         console.error("Lỗi đăng xuất:", err);
-        window.location.href = window.location.origin + '/';
+        window.location.href = window.location.origin + '/dashboard/?start=true';
     });
 
 } else {
@@ -221,16 +248,6 @@ if (IS_AUTH_MODE) {
             AuthUI.update(JSON.parse(cached));
         } else {
             AuthUI.update(null);
-        }
-        
-        if (window.DashboardRender && typeof window.DashboardRender.render === 'function') {
-            window.DashboardRender.render();
-            if (window.DashboardManager) {
-                window.DashboardManager.refreshQuota();
-                if (typeof window.DashboardManager.checkFinalStatus === 'function') {
-                    window.DashboardManager.checkFinalStatus();
-                }
-            }
         }
         
         if (isFirstAuthCheck) {

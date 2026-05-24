@@ -11,10 +11,9 @@ const SummaryManager = {
         const results = JSON.parse(raw);
 
         // Đổ dữ liệu vào UI
-        const t = (typeof I18n !== 'undefined') ? (k) => I18n.t(k) : (k) => k;
-        document.getElementById('summary-total').innerText = `${t('stu_label_total')}: ${results.total}`;
-        document.getElementById('summary-correct').innerText = `${t('stu_label_correct')}: ${results.correct}`;
-        document.getElementById('summary-warn').innerText = `${t('stu_label_warn')}: ${results.warn}`;
+        document.getElementById('summary-total').innerText = results.total;
+        document.getElementById('summary-correct').innerText = results.correct;
+        document.getElementById('summary-warn').innerText = results.warn;
         document.getElementById('summary-score').innerText = results.score;
     },
 

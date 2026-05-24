@@ -35,14 +35,25 @@ const UniversalNormalizer = {
         pairs.sort((a, b) => a.originalNum - b.originalNum);
 
         // BƯỚC 4: Đổi số và đổ vào mảng kết quả
-        // Logic đổi số: Lấy số gốc % 100 (Ví dụ 101 -> 1, 205 -> 5) 
-        // Hoặc nếu ông muốn 101, 103, 111 thành 1, 3, 11 thì dùng logic này:
         let result = total > 0 ? new Array(total).fill("") : [];
         let mappingLog = [];
 
+        // Tính toán offset nếu dải số bắt đầu vượt quá tổng số câu
+        let offset = 0;
+        if (total > 0 && pairs.length > 0 && pairs[0].originalNum > total) {
+            offset = pairs[0].originalNum - 1;
+            console.log(`[Normalizer] Dải đáp án vượt quá tổng số câu (${total}). Áp dụng offset: -${offset}`);
+        }
+
         pairs.forEach(pair => {
-            // Đổi số: 101 -> 1, 111 -> 11
-            const newNum = pair.originalNum % 100 === 0 ? 100 : pair.originalNum % 100;
+            let newNum;
+            if (offset > 0) {
+                // Áp dụng offset để dời về bắt đầu từ 1
+                newNum = pair.originalNum - offset;
+            } else {
+                // Logic cũ nếu không có offset (ví dụ 101 -> 1)
+                newNum = pair.originalNum % 100 === 0 ? 100 : pair.originalNum % 100;
+            }
             
             if (total === 0 || newNum <= total) {
                 result[newNum - 1] = pair.ans;

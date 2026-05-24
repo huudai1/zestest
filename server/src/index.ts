@@ -6,6 +6,8 @@ import { ExamRoom } from './do/ExamRoom'
 import { identityRoutes, handleIdentityAction } from './routes/identity'
 import { examsRoutes, handleExamAction } from './routes/exams'
 import { handleGiftAction } from './routes/gifts'
+import { getAnalytics, addTeacherComment } from './routes/analytics'
+import { saveBranding, getBrandingBySubdomain, uploadBrandingImage, getBrandingByTeacherId } from './routes/branding'
 
 const app = new Hono<{ Bindings: Bindings }>()
 
@@ -20,6 +22,26 @@ app.use('*', async (c, next) => {
     }
 })
 
+// 1.5 Subdomain Redirect Gatekeeper (Bắt buộc phải ở trên cùng)
+app.use('*', async (c, next) => {
+    const host = c.req.header('host') || '';
+    const url = new URL(c.req.url);
+    const path = url.pathname;
+    
+    // Log để debug (xem trong Cloudflare Dashboard)
+    console.log(`🌐 [Routing] Host: ${host} | Path: ${path}`);
+
+    // Nếu là subdomain của zestest.com (và không phải bản thân zestest.com)
+    if (host.includes('.zestest.com') && !host.startsWith('zestest.com') && !host.includes('workers.dev')) {
+        // Nếu truy cập trang chủ của subdomain
+        if (path === '/' || path === '/index.html') {
+            console.log(`🔀 [Redirect] Chuyển hướng ${host} về trang Student`);
+            return c.redirect('/static/student/index.html');
+        }
+    }
+    await next();
+})
+
 // 2. Health check
 app.get('/api/stats', (c) => c.text('OK'))
 
@@ -27,17 +49,27 @@ app.get('/api/stats', (c) => c.text('OK'))
 app.route('/api/users', identityRoutes)
 app.route('/api/exams', examsRoutes)
 
+// API Analytics
+app.get('/api/analytics', getAnalytics)
+app.post('/api/analytics/comment', addTeacherComment)
+
+// API Branding
+app.post('/api/branding', saveBranding)
+app.get('/api/branding/:subdomain', getBrandingBySubdomain)
+app.get('/api/branding/teacher/:teacher_id', getBrandingByTeacherId)
+app.post('/api/branding/upload', uploadBrandingImage)
+
 // 4. Các API Public & Results (Không yêu cầu X-User-ID)
 app.get('/api/public/exam/:exam_id', async (c) => {
     const exam_id = c.req.param('exam_id');
     try {
         const exam = await c.env.DB.prepare(
-            `SELECT e.id, e.exam_name as name, e.storage_url as url, e.status, e.max_attempts, 
+            `SELECT e.id, e.exam_name as name, e.storage_url as url, e.status, e.max_attempts, e.require_login,
                     COALESCE(u.tier, 'GUEST') as owner_tier
              FROM exams e
              LEFT JOIN users u ON e.owner_id = u.id
              WHERE e.id = ? AND (e.status = 'ACTIVE' OR e.status = 'CLOSED')`
-        ).bind(exam_id).first<{ id: string, name: string, url: string, status: string, max_attempts: number, owner_tier: string }>();
+        ).bind(exam_id).first<{ id: string, name: string, url: string, status: string, max_attempts: number, require_login: number, owner_tier: string }>();
 
         if (!exam) return c.json({ success: false, message: 'Đề thi không tồn tại hoặc đã bị khóa.' }, 404);
 
@@ -177,9 +209,47 @@ app.post('/api/action', async (c) => {
 // 6. Route WebSocket kết nối vào Durable Object
 app.get('/api/room/:examId', async (c) => {
     const examId = c.req.param('examId');
-    const id = c.env.MONITOR_ROOM.idFromName(examId);
-    const room = c.env.MONITOR_ROOM.get(id);
-    return room.fetch(c.req.raw);
+    
+    try {
+        // Kiểm tra xem đề thi có tồn tại và thuộc sở hữu của tài khoản Premium hay không
+        const exam = await c.env.DB.prepare(
+            `SELECT u.tier, u.tier_expires_at FROM exams e
+             JOIN users u ON e.owner_id = u.id
+             WHERE e.id = ?`
+        ).bind(examId).first<{ tier: string, tier_expires_at: number }>();
+
+        if (!exam) {
+            console.log(`⚠️ [DO Block] Kết nối thất bại. Đề thi [${examId}] không tồn tại.`);
+            return c.json({ success: false, message: 'Đề thi không tồn tại hoặc đã bị khóa.' }, 404);
+        }
+
+        let tier = exam.tier;
+        const expiresAt = exam.tier_expires_at || 0;
+
+        // Nếu hết hạn premium, tự động hạ cấp xuống USER_FREE
+        if (expiresAt > 0 && Date.now() > expiresAt) {
+            tier = 'USER_FREE';
+        }
+
+        // Các Premium tier được phép sử dụng Durable Object proctoring
+        const isPremium = ['GIFT_PRO', 'PREMIUM_1', 'PREMIUM_2', 'PREMIUM_3', 'ADMIN'].includes(tier);
+
+        if (!isPremium) {
+            console.log(`🚫 [DO Block] Từ chối kết nối WebSocket vào đề [${examId}]. Tier chủ sở hữu: [${tier}].`);
+            return c.json({ 
+                success: false, 
+                message: 'Tính năng giám sát thi thời gian thực yêu cầu tài khoản Premium.' 
+            }, 403);
+        }
+
+        console.log(`✅ [DO Allow] Thiết lập WebSocket vào đề [${examId}]. Tier chủ sở hữu: [${tier}].`);
+        const id = c.env.MONITOR_ROOM.idFromName(examId);
+        const room = c.env.MONITOR_ROOM.get(id);
+        return room.fetch(c.req.raw);
+    } catch (error: any) {
+        console.error("❌ [DO Connection Error] Lỗi kiểm tra bảo mật:", error);
+        return c.json({ success: false, message: 'Lỗi máy chủ nội bộ.' }, 500);
+    }
 });
 
 // 6.5 Phục vụ file từ R2 (CDN nội bộ)
