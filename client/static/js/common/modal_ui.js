@@ -19,7 +19,10 @@ window.ModalUI = {
             zIndex: '100000',
             flexDirection: 'column',
             padding: '40px 20px',
+            boxSizing: 'border-box',
             overflowY: 'auto',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
             textAlign: 'center'
         });
         return overlay;
@@ -53,7 +56,7 @@ window.ModalUI = {
     renderShareModal(overlay, link) {
         const t = typeof I18n !== 'undefined' ? (k) => I18n.t(k) : (k) => k;
         overlay.innerHTML = `
-            <div style="max-width: 900px; margin: 0 auto; width: 100%; animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
+            <div style="max-width: 900px; margin: auto; width: 100%; animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
                     <h2 style="margin: 0; font-size: 28px; font-weight: 800; background: linear-gradient(to right, var(--color-primary), #a29bfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">${t('share_title')}</h2>
                     <button id="btnCloseShare" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #94a3b8; padding: 10px 22px; border-radius: 12px; cursor: pointer; font-weight: 600; transition: 0.3s;">${t('share_close')}</button>
@@ -149,7 +152,7 @@ window.ModalUI = {
     renderPremiumModal(overlay, bankConfig, qrUrl) {
         const t = typeof I18n !== 'undefined' ? (k) => I18n.t(k) : (k) => k;
         overlay.innerHTML = `
-            <div class="modal-box" style="padding: 30px; max-width: 450px; text-align: center; background: #0f172a; border: 1px solid rgba(251, 191, 36, 0.2); border-radius: 28px; box-shadow: 0 25px 60px rgba(0,0,0,0.6); animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
+            <div class="modal-box" style="padding: 30px; max-width: 450px; width: 100%; margin: auto; text-align: center; background: #0f172a; border: 1px solid rgba(251, 191, 36, 0.2); border-radius: 28px; box-shadow: 0 25px 60px rgba(0,0,0,0.6); animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
                 <h2 style="margin-top:0; font-size: 26px; font-weight: 800; background: linear-gradient(to right, #fbbf24, #f59e0b); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">${t('pro_modal_title')}</h2>
                 <p style="color: #94a3b8; font-size: 14px; margin-bottom: 25px;">${t('pro_modal_sub')}</p>
                 
@@ -223,8 +226,8 @@ window.ModalUI = {
     renderQuotaModal(isGuest, title, content, btnAction, btnText, btnBg, btnColor) {
         const t = typeof I18n !== 'undefined' ? (k) => I18n.t(k) : (k) => k;
         const modalHtml = `
-            <div id="quotaModal" class="modal-overlay" style="display:flex; z-index: 100001; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; backdrop-filter: blur(8px);">
-                <div class="modal-box" style="max-width: 400px; text-align: center; padding: 30px; border-radius: 24px; background: #0f172a; border: 1px solid rgba(255,255,255,0.05);">
+            <div id="quotaModal" class="modal-overlay" style="display:flex; z-index: 100001; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: flex-start; padding: 40px 20px; box-sizing: border-box; overflow-y: auto; backdrop-filter: blur(8px);">
+                <div class="modal-box" style="max-width: 400px; width: 100%; margin: auto; text-align: center; padding: 30px; border-radius: 24px; background: #0f172a; border: 1px solid rgba(255,255,255,0.05);">
                     <div style="font-size: 50px; margin-bottom: 15px;">${isGuest ? '🔐' : '👑'}</div>
                     <h2 style="margin-bottom: 10px; font-size: 22px; color: #fff;">${title}</h2>
                     <p style="color: #94a3b8; font-size: 14px; line-height: 1.6; margin-bottom: 25px;">${content}</p>
@@ -241,8 +244,8 @@ window.ModalUI = {
     renderSorryQuotaModal(content) {
         const t = typeof I18n !== 'undefined' ? (k) => I18n.t(k) : (k) => k;
         const modalHtml = `
-            <div id="quotaModal" class="modal-overlay" style="display:flex; z-index: 100001; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: center; backdrop-filter: blur(8px);">
-                <div class="modal-box" style="max-width: 400px; text-align: center; padding: 35px; border-radius: 30px; background: #0f172a; border: 1px solid rgba(255,255,255,0.05); animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
+            <div id="quotaModal" class="modal-overlay" style="display:flex; z-index: 100001; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); align-items: center; justify-content: flex-start; padding: 40px 20px; box-sizing: border-box; overflow-y: auto; backdrop-filter: blur(8px);">
+                <div class="modal-box" style="max-width: 400px; width: 100%; margin: auto; text-align: center; padding: 35px; border-radius: 30px; background: #0f172a; border: 1px solid rgba(255,255,255,0.05); animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
                     <div style="font-size: 60px; margin-bottom: 20px;">😥</div>
                     <h2 style="margin-bottom: 12px; font-size: 24px; color: #fff; font-weight: 800;">${t('sorry_title')}</h2>
                     <p style="color: #94a3b8; font-size: 14px; line-height: 1.6; margin-bottom: 30px;">${content}</p>
@@ -260,7 +263,7 @@ window.ModalUI = {
 
     renderStatsModal(overlay) {
         overlay.innerHTML = `
-            <div style="max-width: 850px; margin: 0 auto; width: 100%; animation: modalPop 0.4s ease;">
+            <div style="max-width: 850px; margin: auto; width: 100%; animation: modalPop 0.4s ease;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
                     <h2 style="margin: 0; font-size: 24px; font-weight: 800; color: #fff;">📊 Thống kê kết quả</h2>
                     <button id="btnCloseStats" style="background: rgba(255,255,255,0.05); border: none; color: #94a3b8; padding: 8px 20px; border-radius: 10px; cursor: pointer;">Đóng</button>
@@ -332,7 +335,7 @@ window.ModalUI = {
 
     renderSuccessModal(overlay, data) {
         overlay.innerHTML = `
-            <div class="modal-box" style="padding: 35px; max-width: 380px; text-align: center; border: 1px solid rgba(0, 149, 255, 0.2); background: var(--bg-modal, #0f172a); border-radius: 28px; box-shadow: 0 25px 60px rgba(0,0,0,0.4); animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
+            <div class="modal-box" style="padding: 35px; max-width: 380px; width: 100%; margin: auto; text-align: center; border: 1px solid rgba(0, 149, 255, 0.2); background: var(--bg-modal, #0f172a); border-radius: 28px; box-shadow: 0 25px 60px rgba(0,0,0,0.4); animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
                 <div style="font-size: 60px; margin-bottom: 20px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));">✨</div>
                 <h3 style="margin-bottom: 15px; font-size: 22px; font-weight: 800; background: linear-gradient(to right, #0095ff, #a29bfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Hoàn tất xuất sắc!</h3>
                 
@@ -468,7 +471,7 @@ window.ModalUI = {
 
     renderGiftModal(overlay, file) {
         overlay.innerHTML = `
-            <div class="modal-box" style="padding: 40px; max-width: 450px; text-align: center; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #fbbf24; border-radius: 30px; box-shadow: 0 0 30px rgba(251, 191, 36, 0.3); animation: modalPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);">
+            <div class="modal-box" style="padding: 40px; max-width: 450px; width: 100%; margin: auto; text-align: center; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); border: 2px solid #fbbf24; border-radius: 30px; box-shadow: 0 0 30px rgba(251, 191, 36, 0.3); animation: modalPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);">
                 <div style="font-size: 60px; margin-bottom: 20px;">🎁</div>
                 <h2 style="color: #fbbf24; margin-bottom: 15px; font-weight: 900;">QUÀ TẶNG BẤT NGỜ!</h2>
                 <p style="color: #e2e8f0; font-size: 15px; line-height: 1.6; margin-bottom: 25px;">

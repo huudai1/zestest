@@ -39,7 +39,7 @@
 
 .btn-gray { background: #333; color: #fff; }
 .btn-red { background: #b71c1c; color: #fff; }
-.btn-lime { background: #cddc39; color: #000; flex-grow: 1; }
+.btn-lime { background: #cddc39; color: #000; }
 
 /* ================= VIEWER WINDOW (80% - TRÀN VIỀN) ================= */
 .viewer-window {
@@ -190,7 +190,10 @@
     display: none; /* Ẩn mặc định */
     z-index: 9999;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    padding: 40px 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
 }
 
 .modal-content {
@@ -202,6 +205,7 @@
     display: flex;
     flex-direction: column;
     max-height: 80vh;
+    margin: auto;
 }
 
 .modal-header {

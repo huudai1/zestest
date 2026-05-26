@@ -20,7 +20,10 @@ window.DashboardUI = {
             zIndex: '100000',
             flexDirection: 'column',
             padding: '40px 20px',
+            boxSizing: 'border-box',
             overflowY: 'auto',
+            alignItems: 'center',
+            justifyContent: 'flex-start',
             textAlign: 'center'
         });
         return overlay;
@@ -49,7 +52,7 @@ window.DashboardUI = {
         if (!overlay) return;
 
         overlay.innerHTML = `
-            <div class="modal-box" style="padding: 35px; max-width: 380px; text-align: center; border: 1px solid rgba(0, 149, 255, 0.2); background: var(--bg-modal); border-radius: 28px; box-shadow: 0 25px 60px rgba(0,0,0,0.4); animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
+            <div class="modal-box" style="padding: 35px; max-width: 380px; width: 100%; margin: auto; text-align: center; border: 1px solid rgba(0, 149, 255, 0.2); background: var(--bg-modal); border-radius: 28px; box-shadow: 0 25px 60px rgba(0,0,0,0.4); animation: modalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
                 <div style="font-size: 60px; margin-bottom: 20px; filter: drop-shadow(0 10px 15px rgba(0,0,0,0.2));">✨</div>
                 <h3 style="margin-bottom: 15px; font-size: 22px; font-weight: 800; background: linear-gradient(to right, #0095ff, #a29bfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Hoàn tất xuất sắc!</h3>
                 
@@ -108,8 +111,8 @@ window.DashboardUI = {
         let btnColor = isGuest ? "#fff" : "#000";
 
         const modalHtml = `
-            <div id="quotaModal" class="modal-overlay" style="display:flex; z-index: 100001;">
-                <div class="modal-box" style="max-width: 400px; text-align: center; padding: 30px; border-radius: 24px; background: #0f172a; border: 1px solid rgba(255,255,255,0.05);">
+            <div id="quotaModal" class="modal-overlay" style="display:flex; z-index: 100001; align-items: center; justify-content: flex-start; padding: 40px 20px; box-sizing: border-box; overflow-y: auto;">
+                <div class="modal-box" style="max-width: 400px; width: 100%; margin: auto; text-align: center; padding: 30px; border-radius: 24px; background: #0f172a; border: 1px solid rgba(255,255,255,0.05);">
                     <div style="font-size: 50px; margin-bottom: 15px;">${isGuest ? '🔐' : '👑'}</div>
                     <h2 style="margin-bottom: 10px; font-size: 22px; color: #fff;">${title}</h2>
                     <p style="color: #94a3b8; font-size: 14px; line-height: 1.6; margin-bottom: 25px;">${content}</p>
@@ -150,10 +153,34 @@ window.DashboardUI = {
         }
     },
 
+    showBrandingMaintenanceModal() {
+        const modalHtml = `
+            <div id="brandingMaintenanceModal" class="modal-overlay" style="display:flex; z-index: 100001; backdrop-filter: blur(8px); align-items: center; justify-content: flex-start; padding: 40px 20px; box-sizing: border-box; overflow-y: auto;">
+                <div class="modal-box" style="max-width: 400px; width: 100%; margin: auto; text-align: center; padding: 30px; border-radius: 24px; background: #0f172a; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);">
+                    <div style="font-size: 50px; margin-bottom: 15px;">🎨</div>
+                    <h2 style="margin-bottom: 12px; font-size: 22px; color: #fff;">Website thương hiệu riêng</h2>
+                    <p style="color: #94a3b8; font-size: 14px; line-height: 1.6; margin-bottom: 20px; text-align: center;">
+                        Sở hữu website thương hiệu riêng chỉ với <b style="color: #fbbf24;">199k/tháng</b><br>(thay vì tốn hàng chục triệu thuê thiết kế ngoài).
+                    </p>
+                    <div style="font-size: 12px; font-weight: 900; color: #ef4444; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); padding: 8px 16px; border-radius: 20px; display: inline-block; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px;">
+                        ⚠️ Đang hoàn thiện
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <button onclick="window.open('https://zalo.me/0961416095', '_blank')" class="btn-done" style="width: 100%; padding: 14px; background: linear-gradient(135deg, #0095ff 0%, #0070f3 100%); color: #fff; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 15px rgba(0, 149, 255, 0.3);">
+                            💬 Liên hệ Admin/Nhận thông tin
+                        </button>
+                        <button onclick="document.getElementById('brandingMaintenanceModal').remove()" style="background: transparent; border: none; color: #64748b; cursor: pointer; font-size: 13px; font-weight: 600; padding: 10px 0;">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+    },
+
     showError(overlay, message) {
         if (!overlay) return;
         overlay.innerHTML = `
-            <div style="color: #ef4444; padding: 40px;">
+            <div style="color: #ef4444; padding: 40px; margin: auto; max-width: 400px; width: 100%; background: #0f172a; border-radius: 20px; border: 1px solid rgba(239, 68, 68, 0.2);">
                 <h3>❌ Lỗi</h3>
                 <p>${message}</p>
                 <button onclick="DashboardUI.closeModal()" style="margin-top: 20px; padding: 10px 20px; border-radius: 8px; border: none; background: #334155; color: white; cursor: pointer;">Đóng</button>

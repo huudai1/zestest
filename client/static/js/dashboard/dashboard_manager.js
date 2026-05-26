@@ -183,7 +183,7 @@ window.DashboardManager = {
             window.logoutGoogle();
         } else {
             localStorage.clear();
-            window.location.href = '/';
+            window.location.href = '/dashboard/?start=true';
         }
     },
 

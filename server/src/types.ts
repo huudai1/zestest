@@ -18,9 +18,9 @@ export enum UserTier {
 }
 
 export const TIER_LIMITS = {
-    GUEST: { max_active_exams: 1, ttl_hours: 4, max_students: 50 },
-    USER_FREE: { max_active_exams: 3, ttl_hours: 24, max_students: 50 },
-    GIFT_PRO: { max_active_exams: 5, ttl_hours: 72, max_students: 50 },
+    GUEST: { max_active_exams: 5, ttl_hours: 4, max_students: 50 },
+    USER_FREE: { max_active_exams: 10, ttl_hours: 24, max_students: 50 },
+    GIFT_PRO: { max_active_exams: 15, ttl_hours: 72, max_students: 50 },
     PREMIUM_1: { max_active_exams: 20, ttl_hours: 720, max_students: 100 },
     PREMIUM_2: { max_active_exams: 100, ttl_hours: 720, max_students: 100 },
     PREMIUM_3: { max_active_exams: 200, ttl_hours: 720, max_students: 100 }

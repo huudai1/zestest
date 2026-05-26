@@ -33,12 +33,21 @@ if (typeof window === 'undefined') {
                 newHeaders.set("Cross-Origin-Embedder-Policy", "credentialless");
                 newHeaders.set("Cross-Origin-Opener-Policy", "same-origin");
 
-                return new Response(response.body, {
+                // FIX: Response with null body status (204, 205, 304) cannot have body
+                const isNullBodyStatus = [204, 205, 304].includes(response.status);
+                
+                return new Response(isNullBodyStatus ? null : response.body, {
                     status: response.status,
                     statusText: response.statusText,
                     headers: newHeaders,
                 });
-            }).catch((e) => console.error(e))
+            }).catch((e) => {
+                // Chỉ log cảnh báo nếu request thuộc chính origin của app (tránh ô nhiễm console bởi adblock chặn link ngoài)
+                if (url.origin === self.location.origin) {
+                    console.warn("COI Worker Same-Origin Fetch Fallback:", e.message || e);
+                }
+                return fetch(event.request); // Fallback to original fetch
+            })
         );
     });
 } else {
@@ -46,6 +55,12 @@ if (typeof window === 'undefined') {
     if (!window.crossOriginIsolated) {
         // Đăng ký file chính nó làm Service Worker
         navigator.serviceWorker.register('/coi-serviceworker.js', { scope: '/' }).then((registration) => {
+            const isAppPage = window.location.pathname.includes('dashboard') || 
+                              window.location.pathname.includes('step') ||
+                              window.location.search.includes('start=true');
+
+            if (!isAppPage) return; // Không làm phiền trang chủ hoặc trang tĩnh
+
             registration.addEventListener("updatefound", () => {
                 const url = new URL(window.location.href);
                 if (!url.searchParams.has('login') && !url.searchParams.has('logout')) {
