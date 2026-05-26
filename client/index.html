@@ -493,6 +493,12 @@
                     setTimeout(() => {
                         showPage('dashboard-page');
                         splash.style.display = 'none';
+
+                        // Tự động mở khung tạo đề mới nếu có tham số ?start=true
+                        const params = new URLSearchParams(window.location.search);
+                        if (params.get('start') === 'true' && typeof DashboardManager !== 'undefined') {
+                            DashboardManager.goToCreate();
+                        }
                     }, 400);
                 } else {
                     // Nếu server chưa phản hồi, giữ nguyên ở dòng "Đang kết nối..."

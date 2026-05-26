@@ -1,6 +1,8 @@
 # 1. Giữ nguyên các file tĩnh (js, css, hình ảnh)
 
-
+# 2. Điều hướng cho Dashboard (SPA Rewrite)
+/dashboard/*   /index.html             200
+/dashboard     /index.html             200
 
 # 3. Điều hướng cho Học sinh (Trỏ về thư mục, không trỏ vào file .html)
 /lobby/*   /static/student/        200
