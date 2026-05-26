@@ -16,44 +16,40 @@ identityRoutes.post('/sync', async (c) => {
         const body = await c.req.json<{ old_id: string, new_id: string, email: string }>();
         const { old_id, new_id, email } = body;
 
-        // 1. Kiểm tra xem User Google này đã từng tồn tại chưa
-        const existingUser = await c.env.DB.prepare(
-            `SELECT * FROM users WHERE id = ?`
-        ).bind(new_id).first<{ id: string, tier: string, email: string }>();
-
-        if (existingUser) {
-            console.log(`🏠 [API] Người dùng cũ quay lại: ${email}`);
-            return c.json({
-                success: true,
-                migrated: false,
-                user: {
-                    uid: existingUser.id,
-                    tier: existingUser.tier,
-                    email: existingUser.email
-                }
-            });
-        }
-
-        // 2. Nếu là người dùng mới, thực hiện đồng bộ từ guest
-        console.log(`✨ [API] Người dùng mới đăng ký, đang di dời dữ liệu từ ${old_id}...`);
-
+        // 1. Ghi vào bảng (Upsert): Nếu chưa có thì chèn mới, nếu có rồi thì chỉ cập nhật email
         await c.env.DB.prepare(
-            `INSERT INTO users (id, tier, email, created_at) VALUES (?, ?, ?, ?)`
+            `INSERT INTO users (id, tier, email, created_at) 
+             VALUES (?, ?, ?, ?)
+             ON CONFLICT(id) DO UPDATE SET email = excluded.email`
         ).bind(new_id, UserTier.USER_FREE, email, Date.now()).run();
 
-        // Di chuyển exams
+        // 2. Di chuyển dữ liệu từ Guest sang User chính thức (nếu có)
+        let migrated = false;
         if (old_id && old_id.startsWith('gst_')) {
             await c.env.DB.prepare(
                 `UPDATE exams SET owner_id = ? WHERE owner_id = ?`
             ).bind(new_id, old_id).run();
 
             await c.env.DB.prepare(`DELETE FROM users WHERE id = ?`).bind(old_id).run();
+            migrated = true;
+            console.log(`✨ [API] Đã di dời dữ liệu từ ${old_id} sang ${new_id}`);
+        } else {
+            console.log(`🏠 [API] Đã ghi nhận đăng nhập từ: ${email}`);
         }
+
+        // 3. Lấy lại thông tin user từ DB để trả về Frontend
+        const user = await c.env.DB.prepare(
+            `SELECT * FROM users WHERE id = ?`
+        ).bind(new_id).first<{ id: string, tier: string, email: string }>();
 
         return c.json({
             success: true,
-            migrated: true,
-            user: { uid: new_id, tier: UserTier.USER_FREE, email }
+            migrated: migrated,
+            user: { 
+                uid: user?.id || new_id, 
+                tier: user?.tier || UserTier.USER_FREE, 
+                email: user?.email || email 
+            }
         });
     } catch (error: any) {
         console.error("❌ [API] Lỗi đồng bộ:", error);

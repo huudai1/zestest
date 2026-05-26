@@ -6,14 +6,16 @@ window.PackageEngine = {
             const audioBlob = await StorageManager.getAudio();
             const webpImages = await StorageManager.getWebP();
 
-            zip.file("config.json", JSON.stringify(data));
-            
-            if (audioBlob) zip.file("assets/audio_main.mp3", audioBlob);
-            
+            zip.file("manifest.json", JSON.stringify(data, null, 2));
+
+            if (audioBlob) zip.file("audio_track.mp3", audioBlob);
+
             if (Array.isArray(webpImages)) {
+                const imgFolder = zip.folder("images");
                 webpImages.forEach((img, i) => {
-                    const blob = img.blob || img;
-                    zip.file(`assets/page_${i + 1}.webp`, blob);
+                    const blob = img.blob || img.data || img;
+                    const imgName = img.name || `${i + 1}.webp`;
+                    imgFolder.file(imgName, blob);
                 });
             }
 

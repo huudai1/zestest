@@ -1580,13 +1580,12 @@
 
         // Cập nhật UI học sinh khi đổi ngôn ngữ (không cần reload)
         window.addEventListener('languageChanged', () => {
-            // ... (bỏ qua để ngắn gọn, thay thế code ở vị trí cuối body)
             if (typeof I18n !== 'undefined') I18n.apply();
         });
     </script>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
         
         const firebaseConfig = {
             apiKey: "AIzaSyDOZqrYPVqBo6Hd3Ma7Jpnr79JaQ7Kv3OE",
@@ -1599,6 +1598,99 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
+        
+        // Cố định Persistence để tránh lỗi mất Session
+        setPersistence(auth, browserLocalPersistence).catch(console.error);
+        
+        // Khôi phục phiên đăng nhập tự động
+        const btnStartAuth = document.getElementById('btnStart');
+        if (btnStartAuth) {
+            btnStartAuth.disabled = true;
+            btnStartAuth.style.opacity = '0.5';
+        }
+        
+        // BƯỚC 1: Lấy tạm Cache ngay lập tức để học sinh không phải đợi
+        const cachedUid = localStorage.getItem('zest_cached_student_uid');
+        if (cachedUid) {
+            window.studentUid = cachedUid;
+            window.studentName = localStorage.getItem('zest_cached_student_name') || "";
+            window.studentEmail = localStorage.getItem('zest_cached_student_email') || "";
+            
+            const loginBox = document.getElementById('student-login-box');
+            const nameBox = document.getElementById('student-name-box');
+            if (loginBox) loginBox.style.display = 'none';
+            if (nameBox) {
+                nameBox.style.display = 'block';
+                const inputName = document.getElementById('inputName');
+                if (inputName && !inputName.value) {
+                    inputName.value = window.studentName;
+                }
+                inputName.disabled = false;
+                inputName.style.opacity = '1';
+            }
+            if (btnStartAuth && !btnStartAuth.innerText.includes('PHÒNG ĐÃ ĐÓNG')) {
+                btnStartAuth.disabled = false;
+                btnStartAuth.style.opacity = '1';
+            }
+        }
+        
+        const syncStudentToD1 = async (user) => {
+            try {
+                const token = await user.getIdToken(true);
+                const baseUrl = window.location.origin;
+                await fetch(`${baseUrl}/api/users/sync`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ old_id: '', new_id: user.uid, email: user.email, token: token })
+                });
+            } catch (e) {
+                console.error("Lỗi đồng bộ D1:", e);
+            }
+        };
+
+        // BƯỚC 2: Firebase xác thực ngầm và chốt sổ
+        onAuthStateChanged(auth, async (user) => {
+            if (btnStartAuth && !btnStartAuth.innerText.includes('PHÒNG ĐÃ ĐÓNG')) {
+                btnStartAuth.disabled = false;
+                btnStartAuth.style.opacity = '1';
+            }
+            if (user) {
+                window.studentUid = user.uid;
+                window.studentName = user.displayName || user.email;
+                window.studentEmail = user.email;
+                
+                // Cập nhật lại Cache
+                localStorage.setItem('zest_cached_student_uid', window.studentUid);
+                localStorage.setItem('zest_cached_student_name', window.studentName);
+                localStorage.setItem('zest_cached_student_email', window.studentEmail);
+                
+                // Đồng bộ nền để học sinh cũng vào DB
+                syncStudentToD1(user);
+                
+                const loginBox = document.getElementById('student-login-box');
+                const nameBox = document.getElementById('student-name-box');
+                if (loginBox) loginBox.style.display = 'none';
+                if (nameBox) {
+                    nameBox.style.display = 'block';
+                    const inputName = document.getElementById('inputName');
+                    if (inputName && !inputName.value) {
+                        inputName.value = window.studentName;
+                    }
+                    inputName.disabled = false;
+                    inputName.style.opacity = '1';
+                }
+                const banner = document.querySelector('.banner-box');
+                if (banner && banner.innerText.includes('yêu cầu đăng nhập')) {
+                    banner.innerText = '✅ Đã khôi phục phiên đăng nhập!';
+                    banner.style.background = 'rgba(16, 185, 129, 0.2)';
+                    banner.style.color = '#10b981';
+                }
+            } else {
+                // Nếu Firebase thực sự báo là Đã Đăng Xuất (Và cache bị sai lệch)
+                // Thì xoá cache đi
+                localStorage.removeItem('zest_cached_student_uid');
+            }
+        });
         
         window.studentLoginGoogle = async () => {
             const btnText = document.getElementById('login-btn-text');

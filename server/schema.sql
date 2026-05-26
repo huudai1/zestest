@@ -1,4 +1,4 @@
-﻿-- Bảng Users: Lưu thông tin Guest và User đã login
+-- Bảng Users: Lưu thông tin Guest và User đã login
 CREATE TABLE IF NOT EXISTS users (
     id TEXT PRIMARY KEY,
     tier TEXT NOT NULL DEFAULT 'GUEST',
@@ -61,3 +61,7 @@ CREATE TABLE IF NOT EXISTS gift_keys (
 ALTER TABLE users ADD COLUMN referral_code TEXT;
 ALTER TABLE users ADD COLUMN referred_by TEXT;
 CREATE UNIQUE INDEX IF NOT EXISTS idx_users_referral_code ON users(referral_code);
+
+-- Analytics Columns
+ALTER TABLE exam_results ADD COLUMN student_uid TEXT;
+ALTER TABLE exam_results ADD COLUMN teacher_comment TEXT;
